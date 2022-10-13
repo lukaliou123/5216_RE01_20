@@ -10,17 +10,17 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
-import comp5216.sydney.edu.au.afinal.databinding.ActivitySearchBinding;
+import comp5216.sydney.edu.au.afinal.databinding.ActivityNavigatorBinding;
 
-public class Search extends AppCompatActivity {
+public class NavigatorBase extends AppCompatActivity {
 
-    private ActivitySearchBinding binding;
+    private ActivityNavigatorBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        binding = ActivitySearchBinding.inflate(getLayoutInflater());
+        binding = ActivityNavigatorBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         BottomNavigationView navView = findViewById(R.id.nav_view);
@@ -29,7 +29,7 @@ public class Search extends AppCompatActivity {
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.navigation_home, R.id.navigation_search, R.id.navigation_profile)
                 .build();
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_search);
+        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_navigator);
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(binding.navView, navController);
     }
