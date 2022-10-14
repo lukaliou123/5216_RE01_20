@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">Final</string>
     <string name="title_activity_maps">MapsActivity</string>
+    <string name="title_activity_navigator">Navigator</string>
+    <string name="title_home">Home</string>
+    <string name="title_search">Search</string>
+    <string name="title_profile">Profile</string>
 </resources>
