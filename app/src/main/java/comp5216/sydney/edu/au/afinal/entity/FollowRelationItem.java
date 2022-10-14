@@ -6,26 +6,26 @@ import androidx.room.Entity;
 @Entity(tableName = "FollowRelation")
 public class FollowRelationItem {
     public int getFollowerID() {
-        return FollowerID;
+        return followerID;
     }
 
-    public void setFollowerID(int followerID) {
-        FollowerID = followerID;
+    public void setFollowerID(int FollowerID) {
+        this.followerID = FollowerID;
     }
 
-    @ColumnInfo(name = "FollowerID")
-    int FollowerID;
+    @ColumnInfo(name = "followerID")
+    int followerID;
 
     public int getFolloweeID() {
-        return FolloweeID;
+        return followeeID;
     }
 
-    public void setFolloweeID(int followeeID) {
-        FolloweeID = followeeID;
+    public void setFolloweeID(int FolloweeID) {
+        this.followeeID = FolloweeID;
     }
 
-    @ColumnInfo(name = "FollowerID")
-    int FolloweeID;
+    @ColumnInfo(name = "followeeID")
+    int followeeID;
 
 
 }

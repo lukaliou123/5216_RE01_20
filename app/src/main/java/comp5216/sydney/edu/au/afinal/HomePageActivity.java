@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -19,6 +20,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -45,25 +47,72 @@ public class HomePageActivity extends AppCompatActivity {
     ArrayList<Integer> followerIDs = new ArrayList<>();
     ArrayList<Integer> followingIDs = new ArrayList<>();
     File localFile = null;
+    Button followBtn;
+    boolean followed = false;
 
-    public void loadWithGlide(String imageUrl) {
-        // [START storage_load_with_glide]
-        // Reference to an image file in Cloud Storage
-        StorageReference storageReference = FirebaseStorage.getInstance().getReferenceFromUrl(imageUrl);
-
-        // ImageView in your Activity
-        ImageView imageView = findViewById(R.id.IconImageView);
-
-        // Download directly from StorageReference using Glide
-        // (See MyAppGlideModule for Loader registration)
-        Glide.with(this /* context */)
-                .load(storageReference)
-                .into(imageView);
-        imageView.setVisibility(View.VISIBLE);
-        // [END storage_load_with_glide]
+    public void onFollowBtnClick(View view) {
+        if(!followed)
+            follow(loginAccountId, viewAccountId);
+        else
+            unfollow(loginAccountId, viewAccountId);
     }
 
+    private void unfollow(int loginAccountId, int viewAccountId) {
+        if(loginAccountId == viewAccountId)
+            return;
 
+        mFireDB.collection("FollowRelation").whereEqualTo("followerID", loginAccountId).whereEqualTo("followeeID", viewAccountId).get().addOnCompleteListener(
+                new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if(task.isSuccessful())
+                        {
+                            for(QueryDocumentSnapshot doc : task.getResult()) {
+                                doc.getReference().delete().addOnCompleteListener(
+                                        new OnCompleteListener<Void>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<Void> task) {
+                                                refreshFollowingStatusUI();
+                                                refreshFollowerStatusUI();
+                                            }
+                                        }
+                                );
+                            }
+                        }
+                    }}
+        );
+
+    }
+
+    private void follow(int loginAccountId, int viewAccountId) {
+        if(loginAccountId == viewAccountId)
+            return;
+
+        mFireDB.collection("FollowRelation").whereEqualTo("followerID", loginAccountId).whereEqualTo("followeeID", viewAccountId).get().addOnCompleteListener(
+                new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if(task.isSuccessful())
+                        {
+                            if (task.getResult().size() == 0)
+                            {
+                                FollowRelationItem item = new FollowRelationItem();
+                                item.setFollowerID(loginAccountId);
+                                item.setFolloweeID(viewAccountId);
+                                mFireDB.collection("FollowRelation").add(item).addOnCompleteListener(
+                                        new OnCompleteListener<DocumentReference>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<DocumentReference> task) {
+                                                refreshFollowingStatusUI();
+                                                refreshFollowerStatusUI();
+                                            }
+                                        }
+                                );
+                            }
+                        }
+                    }}
+        );
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,8 +120,7 @@ public class HomePageActivity extends AppCompatActivity {
         setContentView(R.layout.activity_home_page);
         mFireDB = FirebaseFirestore.getInstance();
         ImageView imageView = findViewById(R.id.IconImageView);
-        imageView.setBackgroundColor(50);
-
+        followBtn = findViewById(R.id.FollowButton);
 
         mFireDB.collection("Accounts").whereEqualTo("AccountID", loginAccountId).get().addOnCompleteListener(
                 new OnCompleteListener<QuerySnapshot>() {
@@ -125,11 +173,18 @@ public class HomePageActivity extends AppCompatActivity {
                         }
                     }}
         );
+        refreshFollowingStatusUI();
+        refreshFollowerStatusUI();
 
-        mFireDB.collection("FollowRelation").whereEqualTo("FollowerID", viewAccountId).get().addOnCompleteListener(
+    }
+
+    void refreshFollowingStatusUI()
+    {
+        mFireDB.collection("FollowRelation").whereEqualTo("followerID", viewAccountId).get().addOnCompleteListener(
                 new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        followingIDs.clear();
                         for(QueryDocumentSnapshot doc : task.getResult())
                         {
                             FollowRelationItem item = doc.toObject(FollowRelationItem.class);
@@ -139,24 +194,35 @@ public class HomePageActivity extends AppCompatActivity {
                         textView.setText("Following " +  followingIDs.size());
                     }}
         );
+    }
 
-        mFireDB.collection("FollowRelation").whereEqualTo("FolloweeID", viewAccountId).get().addOnCompleteListener(
+    void refreshFollowerStatusUI()
+    {
+        mFireDB.collection("FollowRelation").whereEqualTo("followeeID", viewAccountId).get().addOnCompleteListener(
                 new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        for(QueryDocumentSnapshot doc : task.getResult())
-                        {
-                            FollowRelationItem item = doc.toObject(FollowRelationItem.class);
-                            followerIDs.add(item.getFollowerID());
-                            TextView textView = findViewById(R.id.FollowerTextView);
-                            textView.setText("Follower " + followerIDs.size());
+                        if(task.isSuccessful()) {
+                            followerIDs.clear();
+                            followed = false;
+                            for (QueryDocumentSnapshot doc : task.getResult()) {
+                                FollowRelationItem item = doc.toObject(FollowRelationItem.class);
+                                followerIDs.add(item.getFollowerID());
+                                if(loginAccountId == item.getFollowerID()) {
+                                    followed = true;
+                                }
+                                TextView textView = findViewById(R.id.FollowerTextView);
+                                textView.setText("Follower " + followerIDs.size());
+                            }
+                            if(followed)
+                                followBtn.setText("UNFOLLOW");
+                            else
+                                followBtn.setText("Follow");
                         }
                     }}
         );
-
-
-
     }
+
 
 
 }
