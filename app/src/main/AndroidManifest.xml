@@ -29,6 +29,9 @@
             android:exported="true"
             android:label="@string/title_activity_navigator">
         </activity>
+        <activity
+            android:name=".AccountListActivity"
+            android:exported="false" />
         <!--
              TODO: Before you run your application, you need a Google Maps API key.
 

@@ -1,21 +1,17 @@
 package comp5216.sydney.edu.au.afinal;
 
-import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -28,12 +24,8 @@ import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
-import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-import java.net.URLConnection;
 import java.util.ArrayList;
 
 import comp5216.sydney.edu.au.afinal.entity.Account;
@@ -49,6 +41,15 @@ public class HomePageActivity extends AppCompatActivity {
     File localFile = null;
     Button followBtn;
     boolean followed = false;
+    public static final int  REQUEST_CODE_FOLLOWING = 527;
+
+    public void onFollowingClick(View view) {
+        getAndShowAccounts(followingIDs);
+    }
+
+    public void onFollowerClick(View view) {
+        getAndShowAccounts(followerIDs);
+    }
 
     public void onFollowBtnClick(View view) {
         if(!followed)
@@ -114,6 +115,37 @@ public class HomePageActivity extends AppCompatActivity {
         );
     }
 
+    private void getAndShowAccounts(ArrayList<Integer> accountIDs)
+    {
+        mFireDB.collection("Accounts").whereIn("AccountID", accountIDs).get().addOnCompleteListener(
+                new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if(task.isSuccessful())
+                        {
+                            ArrayList<Integer> accountIDs = new ArrayList<>();
+                            ArrayList<String> accountNames = new ArrayList<>();
+                            for(QueryDocumentSnapshot doc : task.getResult())
+                            {
+                                Account cAccount = doc.toObject(Account.class);
+                                accountIDs.add(cAccount.getAccountID());
+                                accountNames.add(cAccount.getName());
+                            }
+
+                            if(accountIDs.size() > 0) {
+                                Intent intent = new Intent(HomePageActivity.this, AccountListActivity.class);
+
+                                intent.putIntegerArrayListExtra("AccountIDs", accountIDs);
+                                intent.putStringArrayListExtra("AccountNames", accountNames);
+                                startActivityForResult(intent, REQUEST_CODE_FOLLOWING);
+                            }
+
+                        }
+                    }
+                }
+        );
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -135,6 +167,11 @@ public class HomePageActivity extends AppCompatActivity {
                             }
                         }
                     }});
+        refreshViewAccountUI();
+    }
+
+    void refreshViewAccountUI()
+    {
         mFireDB.collection("Accounts").whereEqualTo("AccountID", viewAccountId).get().addOnCompleteListener(
                 new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -152,6 +189,9 @@ public class HomePageActivity extends AppCompatActivity {
                                 } catch (IOException e) {
                                     e.printStackTrace();
                                 }
+
+                                refreshFollowingStatusUI();
+                                refreshFollowerStatusUI();
 
                                 StorageReference storageReference = FirebaseStorage.getInstance().getReferenceFromUrl(tobefollowAccount.getIcon());
                                 storageReference.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
@@ -172,11 +212,7 @@ public class HomePageActivity extends AppCompatActivity {
                         }
                     }}
         );
-        refreshFollowingStatusUI();
-        refreshFollowerStatusUI();
-
     }
-
     void refreshFollowingStatusUI()
     {
         mFireDB.collection("FollowRelation").whereEqualTo("followerID", viewAccountId).get().addOnCompleteListener(
@@ -231,6 +267,16 @@ public class HomePageActivity extends AppCompatActivity {
         );
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        super.onActivityResult(requestCode, resultCode, data);
+        int newAccountID = data.getIntExtra("AccountID", viewAccountId);
+        if(viewAccountId != newAccountID) {
+            viewAccountId = newAccountID;
+            refreshViewAccountUI();
+        }
+    }
 
 
 }
