@@ -191,8 +191,12 @@ public class HomePageActivity extends AppCompatActivity {
                             followingIDs.add(item.getFolloweeID());
                         }
                         TextView textView = findViewById(R.id.FollowingTextView);
-                        textView.setText("Following " +  followingIDs.size());
-                    }}
+                        if (followingIDs.size() != 0)
+                            textView.setText("" +  followingIDs.size());
+                        else
+                            textView.setText("0");
+                    }
+                }
         );
     }
 
@@ -212,7 +216,11 @@ public class HomePageActivity extends AppCompatActivity {
                                     followed = true;
                                 }
                                 TextView textView = findViewById(R.id.FollowerTextView);
-                                textView.setText("Follower " + followerIDs.size());
+                                //textView.setText("" + followerIDs.size());
+                                if (followerIDs.size() != 0)
+                                    textView.setText("" +  followerIDs.size());
+                                else
+                                    textView.setText("0");
                             }
                             if(followed)
                                 followBtn.setText("UNFOLLOW");
