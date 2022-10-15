@@ -167,7 +167,6 @@ public class HomePageActivity extends AppCompatActivity {
                                         Log.e(" c", "cant get file");
                                     }
                                 });
-                                //loadWithGlide(tobefollowAccount.getIcon());
                                 break;
                             }
                         }
@@ -215,13 +214,14 @@ public class HomePageActivity extends AppCompatActivity {
                                 if(loginAccountId == item.getFollowerID()) {
                                     followed = true;
                                 }
-                                TextView textView = findViewById(R.id.FollowerTextView);
-                                //textView.setText("" + followerIDs.size());
-                                if (followerIDs.size() != 0)
-                                    textView.setText("" +  followerIDs.size());
-                                else
-                                    textView.setText("0");
                             }
+
+                            TextView textView = findViewById(R.id.FollowerTextView);
+                            if (followerIDs.size() != 0)
+                                textView.setText("" +  followerIDs.size());
+                            else
+                                textView.setText("0");
+
                             if(followed)
                                 followBtn.setText("UNFOLLOW");
                             else
