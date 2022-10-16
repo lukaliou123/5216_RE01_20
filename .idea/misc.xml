@@ -3,6 +3,8 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Android_project/5216_RE01_20/app/src/main/res/layout/activity_login.xml" value="0.26197916666666665" />
+        <entry key="..\:/Android_project/5216_RE01_20/app/src/main/res/layout/activity_register.xml" value="0.26197916666666665" />
         <entry key="..\:/Users/26783/Desktop/comp5216_final/5216_RE01_20/app/src/main/res/drawable/ic_baseline_person_24.xml" value="0.1" />
         <entry key="..\:/Users/26783/Desktop/comp5216_final/5216_RE01_20/app/src/main/res/drawable/ic_baseline_search_24.xml" value="0.1" />
         <entry key="..\:/Users/26783/Desktop/comp5216_final/5216_RE01_20/app/src/main/res/drawable/ic_dashboard_black_24dp.xml" value="0.555" />
