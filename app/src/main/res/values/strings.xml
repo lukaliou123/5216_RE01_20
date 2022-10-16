@@ -6,4 +6,9 @@
     <string name="title_search">Search</string>
     <string name="title_profile">Profile</string>
     <string name="map">Map</string>
+    <string name="todo">TODO</string>
+    <string name="password">password</string>
+    <string name="email_address">Email address</string>
+    <string name="user_name">User name</string>
+    <string name="signup">signup</string>
 </resources>
