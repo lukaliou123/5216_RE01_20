@@ -6,4 +6,9 @@
     <string name="title_search">Search</string>
     <string name="title_profile">Profile</string>
     <string name="map">Map</string>
+    <string name="dialog_cancel_title">Cancel Edit Item</string>
+    <string name="dialog_cancel_msg">Are you sure to cancel this edit? Your unsaved edit will be discarded if you
+click YES</string>
+    <string name="Yes">Yes</string>
+    <string name="No">No</string>
 </resources>
