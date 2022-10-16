@@ -111,12 +111,13 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="240dp"
+        android:layout_marginTop="10dp"
         android:background="@color/yellow">
 
         <TextView
             android:id="@+id/event_title"
             android:layout_width="150dp"
-            android:layout_height="40dp"
+            android:layout_height="30dp"
             android:hint="Title"
             android:background="@color/yellow"
             android:textAlignment="center"
