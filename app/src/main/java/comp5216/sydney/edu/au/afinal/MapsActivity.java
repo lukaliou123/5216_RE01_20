@@ -59,6 +59,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     // two array list for our lat long and location Name;
     private ArrayList<LatLng> latLngArrayList;
     private ArrayList<String> locationNameArraylist;
+    private ArrayList<String> IDArraylist;
+    private HashMap<Integer,String> map = new HashMap<>();
 
     private FirebaseFirestore mFirestore;
     private Query mQuery;
@@ -146,8 +148,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         for (int i = 0; i < latLngArrayList.size(); i++) {
 
             // adding marker to each location on google maps
-            mMap.addMarker(new MarkerOptions().position(latLngArrayList.get(i)).title("Marker in " + locationNameArraylist.get(i)));
-
+            mMap.addMarker(new MarkerOptions().position(latLngArrayList.get(i)).title("Even titile:  " + locationNameArraylist.get(i)));
             // below line is use to move camera.
             mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
         }
@@ -159,6 +160,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 // on marker click we are getting the title of our marker
                 // which is clicked and displaying it in a toast message.
                 String markerName = marker.getTitle();
+                String eventId = IDArraylist.get(Integer.parseInt(marker.getId()));
                 Toast.makeText(MapsActivity.this, "Clicked location is " + markerName, Toast.LENGTH_SHORT).show();
                 return false;
             }
@@ -281,15 +283,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private void getListItems() {
         String TAG = "sb!!!!!!!!!!!!!!!!!!!!!!!!";
-//        mFirestore.collection("Events").document("z3dGI0sXu4uX8fe4QGGD").get()
-//                .addOnCompleteListener(new OnCompleteListener()  {
-//                    @Override
-//                    public void onComplete(@NonNull Task task) {
-//                        DocumentSnapshot document = (DocumentSnapshot) task.getResult();
-//                        String group_string= document.getData().toString();
-//                        System.out.println("what is this!!!!!!!!!!!!!!!!!!!: "+group_string);
-//                    }
-//                });
 
             mFirestore.collection("Events")
                 .get()
@@ -298,12 +291,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot document : task.getResult()) {
+                                String id = document.getId();
+                                IDArraylist.add(id);
                                 GeoPoint geo = (GeoPoint) document.getData().get("geo");
                                 LatLng newLatng = new LatLng(geo.getLatitude(),geo.getLongitude());
+                                System.out.println("id is !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!: "+id);
                                 latLngArrayList.add(newLatng);
-                                String locName = (String)document.getData().get("location");
+                                String title = (String)document.getData().get("title");
                                 //System.out.println("lat is !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!: "+geo);
-                                locationNameArraylist.add(locName);
+                                locationNameArraylist.add(title);
                                 System.out.println("geo is !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!: "+document.getData().get("location"));
                                 Log.d(TAG, document.getId() + " => " + document.getData());
                             }
