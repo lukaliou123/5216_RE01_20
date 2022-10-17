@@ -11,4 +11,9 @@
 click YES</string>
     <string name="Yes">Yes</string>
     <string name="No">No</string>
+    <string name="todo">TODO</string>
+    <string name="password">password</string>
+    <string name="email_address">Email address</string>
+    <string name="user_name">User name</string>
+    <string name="signup">signup</string>
 </resources>
