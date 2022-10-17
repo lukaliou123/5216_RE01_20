@@ -17,10 +17,15 @@
         tools:targetApi="32">
         <activity
             android:name=".RegisterActivity"
-            android:exported="false" />
+            android:exported="false"/>
         <activity
             android:name=".LoginActivity"
-            android:exported="false" />
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".AddActivity"
             android:exported="false">
@@ -37,13 +42,8 @@
         </activity>
         <activity
             android:name=".NavigatorBase"
-            android:exported="true"
+            android:exported="false"
             android:label="@string/title_activity_navigator">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".HomePageActivity"
