@@ -27,28 +27,28 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        mAuth=FirebaseAuth.getInstance();
-
-        id = findViewById(R.id.id);
-        password = findViewById(R.id.password);
-        login = findViewById(R.id.login);
-        signup = findViewById(R.id.signup);
-
-        login.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                loginEvent();
-            }
-        });
-
-        signup.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                startActivity(new Intent(LoginActivity.this,RegisterActivity.class));
-            }
-        });
+//        mAuth=FirebaseAuth.getInstance();
+//
+//        id = findViewById(R.id.id);
+//        password = findViewById(R.id.password);
+//        login = findViewById(R.id.login);
+//        signup = findViewById(R.id.signup);
+//
+//        login.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//
+//                loginEvent();
+//            }
+//        });
+//
+//        signup.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//
+//                startActivity(new Intent(LoginActivity.this,RegisterActivity.class));
+//            }
+//        });
     }
     private void loginEvent(){
 
