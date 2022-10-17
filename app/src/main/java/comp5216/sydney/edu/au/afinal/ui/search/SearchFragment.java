@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.SearchView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -25,6 +26,8 @@ public class SearchFragment extends Fragment {
         View root = binding.getRoot();
 
         final TextView textView = binding.textSearch;
+        final SearchView searchView = binding.searchView;
+        searchView.onActionViewExpanded();
         searchViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
         return root;
     }

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    package="comp5216.sydney.edu.au.afinal">
 
     <application
         android:allowBackup="true"
@@ -13,11 +14,23 @@
         android:theme="@style/Theme.Final"
         tools:targetApi="32">
         <activity
-            android:name=".HomePageActivity"
-            android:exported="true">
+            android:name=".AddActivity"
+            android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
+        </activity>
+        <activity
+            android:name=".EventActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".NavigatorBase"
+            android:exported="true"
+            android:label="@string/title_activity_navigator">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -25,9 +38,11 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".NavigatorBase"
-            android:exported="true"
-            android:label="@string/title_activity_navigator">
+            android:name=".HomePageActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
         </activity>
         <activity
             android:name=".AccountListActivity"
@@ -46,7 +61,7 @@
         <!-- android:name=".MapsActivity" -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="${MAPS_API_KEY}" />
+            android:value="AIzaSyANc1QR8PU0cOh6TdnfjGZUV0D_FSTGbJg" />
 
         <activity
             android:name=".MapsActivity"
