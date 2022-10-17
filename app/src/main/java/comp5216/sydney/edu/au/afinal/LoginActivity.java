@@ -19,7 +19,7 @@ import com.google.firebase.auth.FirebaseAuth;
 public class LoginActivity extends AppCompatActivity {
 
     EditText id,password;
-    Button login,signup;
+    Button login,signup2;
     FirebaseAuth mAuth;
 
     @Override
@@ -27,37 +27,37 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-//        mAuth=FirebaseAuth.getInstance();
-//
-//        id = findViewById(R.id.id);
-//        password = findViewById(R.id.password);
-//        login = findViewById(R.id.login);
-//        signup = findViewById(R.id.signup);
-//
-//        login.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//
-//                loginEvent();
-//            }
-//        });
-//
-//        signup.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//
-//                startActivity(new Intent(LoginActivity.this,RegisterActivity.class));
-//            }
-//        });
+        mAuth=FirebaseAuth.getInstance();
+
+        id = findViewById(R.id.id);
+        password = findViewById(R.id.password);
+        login = findViewById(R.id.login);
+        signup2 = findViewById(R.id.signup2);
+
+        login.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                loginEvent();
+            }
+        });
+
+        signup2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                startActivity(new Intent(LoginActivity.this,RegisterActivity.class));
+            }
+        });
     }
     private void loginEvent(){
 
-        mAuth.signInWithEmailAndPassword(id.getText().toString(),password.getText().toString())
+       mAuth.signInWithEmailAndPassword(id.getText().toString(),password.getText().toString())
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task){
                 if (task.isSuccessful()){
-                    //Sign in success.
+                  //Sign in success.
 
                     startActivity((new Intent(LoginActivity.this,NavigatorBase.class)));
 
