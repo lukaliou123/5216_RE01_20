@@ -49,7 +49,6 @@ public class AddActivity extends AppCompatActivity {
         title = findViewById(R.id.add_title);
         content = findViewById(R.id.content);
         location = findViewById(R.id.add_text_location);
-
         cancel.setOnClickListener(view -> onBackPressed());
         confirm.setOnClickListener(view -> uploadData());
         selectImageBtn.setOnClickListener(view -> chooseImage());
@@ -57,7 +56,7 @@ public class AddActivity extends AppCompatActivity {
 
 
     private void uploadData(){
-
+           //TODO
     }
 
     private void chooseImage(){

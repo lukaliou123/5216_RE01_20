@@ -2,23 +2,27 @@ package comp5216.sydney.edu.au.afinal.entity;
 
 import android.location.Location;
 
+import com.google.firebase.Timestamp;
+import com.google.firebase.firestore.GeoPoint;
+
+import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
 
-public class EventEntity {
+public class EventEntity implements Serializable {
     private String username;
-    private Date date;
+    private Timestamp time;
     private String title;
     private String description;
     private String imageUrl;
     private int likes;
     private String address;
-    private Location location;
+    private GeoPoint location;
 
-    public EventEntity(String username, Date date, String title, String description, String imageUrl,
-                       int likes, String address, Location location) {
+    public EventEntity(String username, Timestamp time, String title, String description, String imageUrl,
+                       int likes, String address, GeoPoint location) {
         this.username = username;
-        this.date = date;
+        this.time = time;
         this.title = title;
         this.description = description;
         this.imageUrl = imageUrl;
@@ -35,12 +39,12 @@ public class EventEntity {
         this.username = username;
     }
 
-    public Date getDate() {
-        return date;
+    public Timestamp getDate() {
+        return time;
     }
 
-    public void setDate(Date date) {
-        this.date = date;
+    public void setDate(Timestamp time) {
+        this.time = time;
     }
 
     public String getTitle() {
@@ -83,11 +87,11 @@ public class EventEntity {
         this.address = address;
     }
 
-    public Location getLocation() {
+    public GeoPoint getLocation() {
         return location;
     }
 
-    public void setLocation(Location location) {
+    public void setLocation(GeoPoint location) {
         this.location = location;
     }
 
@@ -96,14 +100,14 @@ public class EventEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         EventEntity that = (EventEntity) o;
-        return likes == that.likes && Objects.equals(username, that.username) && Objects.equals(date,
-                that.date) && Objects.equals(title, that.title) && Objects.equals(description, that.description)
+        return likes == that.likes && Objects.equals(username, that.username) && Objects.equals(time,
+                that.time) && Objects.equals(title, that.title) && Objects.equals(description, that.description)
                 && Objects.equals(imageUrl, that.imageUrl) && Objects.equals(address, that.address) &&
                 Objects.equals(location, that.location);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(username, date, title, description, imageUrl, likes, address, location);
+        return Objects.hash(username, time, title, description, imageUrl, likes, address, location);
     }
 }
