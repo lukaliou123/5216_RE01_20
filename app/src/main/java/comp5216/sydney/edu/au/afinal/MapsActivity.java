@@ -1,10 +1,16 @@
 package comp5216.sydney.edu.au.afinal;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
 
+import android.annotation.SuppressLint;
+import android.content.pm.PackageManager;
+import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -26,10 +32,13 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+import com.google.android.gms.location.FusedLocationProviderClient;
 
 import comp5216.sydney.edu.au.afinal.databinding.ActivityMapsBinding;
 
@@ -37,6 +46,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private GoogleMap mMap;
     private ActivityMapsBinding binding;
+    private static final int DEFAULT_ZOOM = 15;
+    private static final String TAG = MapsActivity.class.getSimpleName();
 
     // below are the latitude and longitude
     // of 4 different locations.
@@ -53,11 +64,24 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private Query mQuery;
     int LIMIT = 1;
 
-    private static ArrayList<Type> mArrayList = new ArrayList<>();;
+    private static ArrayList<Type> mArrayList = new ArrayList<>();
+
+    private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
+    private boolean mLocationPermissionGranted = false;
+    // The geographical location where the device is currently located. That is, the last-known location retrieved by the Fused Location Provider.
+    private Location mLastKnownLocation = new Location("");
+
+    // A default location (Sydney, Australia) and default zoom to use when location permission is not granted.
+    private final LatLng mDefaultLocation = new LatLng(-33.8688197, 151.2092955);
+    // The entry point to the Fused Location Provider.
+    private FusedLocationProviderClient mFusedLocationProviderClient;
+    private TextView locationTextView;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        latLngArrayList = new ArrayList<>();
+        locationNameArraylist = new ArrayList<>();
         initFirestore();
         getListItems();
         super.onCreate(savedInstanceState);
@@ -76,19 +100,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         //System.out.println("arr size is:!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!: "+ mArrayList.size());
 
         // initializing our array lists.
-        latLngArrayList = new ArrayList<>();
-        locationNameArraylist = new ArrayList<>();
+
 
         // on below line we are adding
         // data to our array list.
-        latLngArrayList.add(sydney);
-        locationNameArraylist.add("Sydney");
-        latLngArrayList.add(TamWorth);
-        locationNameArraylist.add("TamWorth");
-        latLngArrayList.add(NewCastle);
-        locationNameArraylist.add("New Castle");
-        latLngArrayList.add(Brisbane);
-        locationNameArraylist.add("Brisbase");
+//        latLngArrayList.add(sydney);
+//        locationNameArraylist.add("Sydney");
+//        latLngArrayList.add(TamWorth);
+//        locationNameArraylist.add("TamWorth");
+//        latLngArrayList.add(NewCastle);
+//        locationNameArraylist.add("New Castle");
+//        latLngArrayList.add(Brisbane);
+//        locationNameArraylist.add("Brisbase");
     }
 
 
@@ -105,10 +128,20 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
+        // Prompt the user for permission.
+        getLocationPermission();
+
+        // Turn on the My Location layer and the related control on the map.
+        updateLocationUI();
+
+        // Get the current location of the device and set the position of the map.
+        //getDeviceLocation();
+
         // Add a marker in Sydney and move the camera
 //        LatLng sydney = new LatLng(-34, 151);
 //        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
 //        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+
         // below line is to add marker to google maps
         for (int i = 0; i < latLngArrayList.size(); i++) {
 
@@ -131,7 +164,114 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         });
     }
-//
+
+    /**
+     * Prompts the user for permission to use the device location.
+     */
+    private void getLocationPermission() {
+        /*
+         * Request location permission, so that we can get the location of the
+         * device. The result of the permission request is handled by a callback,
+         * onRequestPermissionsResult.
+         */
+        if (ContextCompat.checkSelfPermission(this.getApplicationContext(),
+                android.Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED) {
+            mLocationPermissionGranted = true;
+        } else {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
+                    PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
+        }
+    }
+
+    /**
+     * Updates the map's UI settings based on whether the user has granted location permission.
+     */
+    private void updateLocationUI() {
+        if (mMap == null) {
+            return;
+        }
+        try {
+            // Check if location permission is granted
+            if (mLocationPermissionGranted) {
+                mMap.getUiSettings().setMyLocationButtonEnabled(true); // false to disable my location button
+                mMap.getUiSettings().setZoomControlsEnabled(true); // false to disable zoom controls
+                mMap.getUiSettings().setCompassEnabled(true); // false to disable compass
+                mMap.getUiSettings().setRotateGesturesEnabled(true); // false to disable rotate gesture
+            } else {
+                mMap.getUiSettings().setMyLocationButtonEnabled(false);
+                mLastKnownLocation = null;
+                getLocationPermission();
+            }
+        } catch (SecurityException e)  {
+            Log.e("Exception: %s", e.getMessage());
+        }
+    }
+
+    /**
+     * Gets the current location of the device, and positions the map's camera.
+     */
+    @SuppressLint("MissingPermission")
+    private void getDeviceLocation(){
+        try {
+            if (mLocationPermissionGranted) {
+                //mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+                Task<Location> locationResult = mFusedLocationProviderClient.getLastLocation();
+                //new OnCompleteListener<Location>
+                locationResult.addOnCompleteListener(this, new OnCompleteListener<Location>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Location> task) {
+                        if (task.isSuccessful()) {
+                            // Obtain the current location of the device
+
+                            mLastKnownLocation = task.getResult();
+                            String currentOrDefault = "Current";
+
+                            if (mLastKnownLocation != null) {
+                                Log.i(task.getResult()+"","1111111111111111111111");
+                                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
+                                        new LatLng(mLastKnownLocation.getLatitude(),
+                                                mLastKnownLocation.getLongitude()), DEFAULT_ZOOM));
+                            } else {
+                                Log.d(TAG, "Current location is null. Using defaults.");
+                                currentOrDefault = "Default";
+                                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(mDefaultLocation, DEFAULT_ZOOM));
+                                mMap.getUiSettings().setMyLocationButtonEnabled(false);
+
+                                // Set current location to the default location
+                                mLastKnownLocation = new Location("");
+                                mLastKnownLocation.setLatitude(mDefaultLocation.latitude);
+                                mLastKnownLocation.setLongitude(mDefaultLocation.longitude);
+                            }
+                            Log.i(mLastKnownLocation.getLatitude()+"","!!!!!!!!!!!!!!");
+                            // Show location details on the location TextView
+                            String msg = currentOrDefault + " Location: " +
+                                    Double.toString(mLastKnownLocation.getLatitude()) + ", " +
+                                    Double.toString(mLastKnownLocation.getLongitude());
+                            locationTextView.setText(msg);
+
+                            // Add a marker for my current location on the map
+                            MarkerOptions marker = new MarkerOptions().position(
+                                            new LatLng(mLastKnownLocation.getLatitude(), mLastKnownLocation.getLongitude()))
+                                    .title("I am here");
+                            mMap.addMarker(marker);
+                        } else {
+                            Log.d(TAG, "Current location is null. Using defaults.");
+                            Log.e(TAG, "Exception: %s", task.getException());
+                            mMap.moveCamera(CameraUpdateFactory
+                                    .newLatLngZoom(mDefaultLocation, DEFAULT_ZOOM));
+                            mMap.getUiSettings().setMyLocationButtonEnabled(false);
+                        }
+                    }
+                });
+            }
+        } catch (SecurityException e)  {
+            Log.e("Exception: %s", e.getMessage());
+        }
+    }
+
+    //
     private void initFirestore() {
         mFirestore = FirebaseFirestore.getInstance();
 // Get the 50 highest rated restaurants
@@ -167,6 +307,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                 System.out.println("geo is !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!: "+document.getData().get("location"));
                                 Log.d(TAG, document.getId() + " => " + document.getData());
                             }
+                            if(mMap != null){ //prevent crashing if the map doesn't exist yet (eg. on starting activity)
+                                mMap.clear();
+
+
+                            }
+                            // add markers from database to the map
+                            onMapReady(mMap);
                         } else {
                             Log.d(TAG, "Error getting documents: ", task.getException());
                         }
