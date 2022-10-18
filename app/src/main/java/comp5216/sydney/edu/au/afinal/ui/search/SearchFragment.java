@@ -3,6 +3,7 @@ package comp5216.sydney.edu.au.afinal.ui.search;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +21,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import java.util.ArrayList;
 
+import comp5216.sydney.edu.au.afinal.database.Firebase;
 import comp5216.sydney.edu.au.afinal.databinding.FragmentSearchBinding;
 import comp5216.sydney.edu.au.afinal.entity.EventEntity;
 import comp5216.sydney.edu.au.afinal.util.Adapter;
@@ -28,6 +30,7 @@ public class SearchFragment extends Fragment {
 
     private FragmentSearchBinding binding;
     private ListView listView;
+    private SearchView searchView;
     private ArrayList<EventEntity> events;
     private Adapter eventsAdapter;
 
@@ -40,16 +43,39 @@ public class SearchFragment extends Fragment {
         View root = binding.getRoot();
 
         final TextView textView = binding.textSearch;
-        final SearchView searchView = binding.searchView;
+        searchView = binding.searchView;
         listView = binding.listView;
-        events = new ArrayList<>();
-        searchView.onActionViewExpanded();
+        events = Firebase.getInstance().getAllEvents();
         searchViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
         eventsAdapter = new Adapter(this.getContext(), events);
         listView.setAdapter(eventsAdapter);
+        listView.setTextFilterEnabled(true);
+        setupSearchView();
         listViewListener();
         return root;
     }
+
+    private void setupSearchView(){
+        searchView.onActionViewExpanded();
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                if (TextUtils.isEmpty(newText)) {
+                    listView.clearTextFilter();
+                } else {
+                    listView.setFilterText(newText.toString());
+                }
+                return true;
+            }
+        });
+        searchView.setSubmitButtonEnabled(false);
+    }
+
 
     private void listViewListener(){
         listView.setOnItemClickListener((adapterView, view, i, l) -> {

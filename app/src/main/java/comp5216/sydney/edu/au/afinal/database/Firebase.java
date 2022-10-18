@@ -38,38 +38,50 @@ public class Firebase {
         }
     }
 
-    private static Firebase getInstance(){
+    public static Firebase getInstance(){
         if (mFirebase == null){
-            throw new NullPointerException();
+            init();
         }return mFirebase;
     }
 
 
-    private ArrayList<EventEntity> getSearchItem(String tag) {
+    public ArrayList<EventEntity> getAllEvents() {
+        final boolean[] isDone = {false};
+        int times = 0;
         ArrayList<EventEntity> events = new ArrayList<>();
         mFirestore.collection("Events")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
+                        if(task.isSuccessful()) {
                             for (QueryDocumentSnapshot document : task.getResult()) {
-                                GeoPoint geo = (GeoPoint) document.getData().get("location");
+//                                GeoPoint geo = (GeoPoint) document.getData().get("location");
+                                GeoPoint geo = null;
                                 String title = (String) document.getData().get("title");
                                 String blogRef = (String) document.getData().get("blog_ref");
                                 String blogger = (String) document.getData().get("Blogger");
                                 Timestamp timestamp = (Timestamp) document.getData().get("time");
                                 String description = (String) document.getData().get("description");
                                 List<String> imageUrl = (List<String>) document.getData().get("imageUrl");
-                                Integer likes = (Integer) document.getData().get("likes");
+                                //Integer likes = (Integer) document.getData().get("likes");
+                                Integer likes = 1;
                                 String address = (String) document.getData().get("address");
                                 events.add(new EventEntity(blogger,blogRef,description,timestamp,geo,imageUrl,likes,address,title));
                             }
+                            Log.d("Firebase", "Finish");
+                            isDone[0] = true;
                         } else {
                             Log.d("Firebase", "Error getting documents: ", task.getException());
+                            isDone[0] = true;
                         }
                     }
                 });
+
+//        while(!isDone[0] || times < 8){
+//            Thread.sleep(1000);
+//            times++;
+//        }
         return events;
     }
 

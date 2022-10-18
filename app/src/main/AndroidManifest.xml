@@ -26,12 +26,7 @@
         tools:targetApi="32">
         <activity
             android:name=".AddActivity"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+            android:exported="false"/>
         <activity
             android:name=".RegisterActivity"
             android:exported="false"/>
@@ -51,8 +46,12 @@
         </activity>
         <activity
             android:name=".HomePageActivity"
-            android:exported="false"
-            android:label="@string/title_activity_navigator">
+            android:label="@string/title_activity_navigator"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity
             android:name=".LoginActivity"
