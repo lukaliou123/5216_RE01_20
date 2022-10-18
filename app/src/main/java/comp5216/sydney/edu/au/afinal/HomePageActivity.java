@@ -334,6 +334,29 @@ public class HomePageActivity extends AppCompatActivity {
             TextView Like = convertView.findViewById(R.id.eventLike);
             Like.setText(Integer.toString(event.getLikes()));
 
+            if(event.getImageUrl().size() > 0) {
+                StorageReference storageReference = FirebaseStorage.getInstance().getReferenceFromUrl(event.getImageUrl().get(0));
+                File tempFile = null;
+                try {
+                    tempFile = File.createTempFile("images", "jpg");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                File finalTempFile = tempFile;
+                storageReference.getFile(tempFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                        ImageView iv = findViewById(R.id.eventImageView);
+                        iv.setImageURI(Uri.fromFile(finalTempFile));
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception exception) {
+                        Log.e(" c", "cant get file");
+                    }
+                });
+            }
+
             // Return the completed view to render on screen
             return convertView;
         }
