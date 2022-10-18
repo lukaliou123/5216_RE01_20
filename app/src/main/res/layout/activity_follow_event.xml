@@ -7,7 +7,7 @@
     tools:context=".HomePageActivity">
 
     <ImageView
-        android:id="@+id/followImageView1"
+        android:id="@+id/followImageView"
         android:layout_width="120dp"
         android:layout_height="145dp"
         android:layout_marginStart="5dp"
@@ -17,27 +17,43 @@
         tools:src="@tools:sample/avatars"
         tools:srcCompat="@tools:sample/avatars" />
 
-    <ImageView
-        android:id="@+id/followImageView2"
-        android:layout_width="120dp"
-        android:layout_height="145dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="4dp"
-        app:layout_constraintStart_toEndOf="@+id/followImageView1"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:src="@tools:sample/avatars"
-        tools:srcCompat="@tools:sample/avatars" />
+    <TextView
+        android:id="@+id/followTitle"
+        android:layout_width="185dp"
+        android:layout_height="25dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:textSize="25sp"
+        android:text="Title"
+        app:layout_constraintStart_toEndOf="@+id/followImageView"
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageView
-        android:id="@+id/followImageView3"
-        android:layout_width="120dp"
-        android:layout_height="145dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="4dp"
-        app:layout_constraintStart_toEndOf="@+id/followImageView2"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:src="@tools:sample/avatars"
-        tools:srcCompat="@tools:sample/avatars" />
+    <TextView
+        android:id="@+id/followLike"
+        android:layout_width="183dp"
+        android:layout_height="20dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:textSize="18sp"
+        android:text="like"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        app:layout_constraintStart_toEndOf="@+id/followImageView"
+        app:layout_constraintTop_toBottomOf="@+id/followTitle" />
+
+
+    <TextView
+        android:id="@+id/followDesciption"
+        android:layout_width="183dp"
+        android:layout_height="20dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:textSize="18sp"
+        android:text="Description"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        app:layout_constraintStart_toEndOf="@+id/followImageView"
+        app:layout_constraintTop_toBottomOf="@+id/followLike" />
+
+
 
 
 
