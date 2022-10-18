@@ -242,6 +242,8 @@ public class HomePageActivity extends AppCompatActivity {
                                 EventEntity event = doc.toObject(EventEntity.class);
                                 events.add(event);
                             }
+                            TextView eventCount = findViewById(R.id.EventTextView);
+                            eventCount.setText(Integer.toString(events.size()));
                             eventAdapter.notifyDataSetChanged();
                         }
                     }
