@@ -57,11 +57,15 @@ public class LoginActivity extends AppCompatActivity {
                             startActivity(intent);
                         } else {
                             Log.w(TAG, "signInWithEmail:failure", task.getException());
-                            Toast.makeText(LoginActivity.this, "Authentication failed.",
+                            Toast.makeText(LoginActivity.this, "Incorrect email or password",
                                     Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
+    }
+
+    public void register(View v){
+        startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
     }
 
 }

@@ -52,6 +52,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="132dp"
         android:text="@string/signup"
+        android:onClick="register"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

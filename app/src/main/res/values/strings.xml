@@ -16,4 +16,5 @@ click YES</string>
     <string name="email_address">Email address</string>
     <string name="user_name">User name</string>
     <string name="signup">signup</string>
+    <string name="verify_password">Verify password</string>
 </resources>
