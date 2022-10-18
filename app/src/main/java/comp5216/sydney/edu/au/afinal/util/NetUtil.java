@@ -25,6 +25,7 @@ import java.util.List;
 
 
 import comp5216.sydney.edu.au.afinal.entity.EventEntity;
+import io.grpc.Compressor;
 
 public class NetUtil {
 
@@ -75,26 +76,42 @@ public class NetUtil {
         return  null;
     }
 
-    public static List<String> uploadMediaFiles(List<String> filePaths){
+    public static List<String> uploadMediaFiles(List<String> filePaths, Context context){
         if(filePaths != null && filePaths.size() != 0){
+            final ProgressDialog progressDialog = new ProgressDialog(context);
+            progressDialog.setTitle("Uploading to firebase...");
+            progressDialog.show();
             List<String> resUrlList = new ArrayList<>(filePaths.size());
             StorageReference storageReference =  FirebaseStorage.getInstance().getReference();
             for(int i = 0; i < filePaths.size(); i ++){
                 StorageReference ref = storageReference.child("images/" + new File(filePaths.get(i)).getName());
+                File file = new File(filePaths.get(i));
+
+                int finalI = i;
                 ref.putFile(Uri.fromFile(new File(filePaths.get(i)))).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        progressDialog.setMessage("uploaded: " + finalI + "/" + filePaths.size());
                         ref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                             @Override
                             public void onSuccess(Uri uri) {
                                 //get the url of the file we have uploaded
                                 Log.e("uri",uri.getPath());
                                 resUrlList.add(uri.getPath());
+
                             }
                         });
                     }
-                });
+                }) .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                progressDialog.dismiss();
+                                Toast.makeText(context, "Failed "+e.getMessage(), Toast.LENGTH_SHORT).show();
+                            }
+                        });
+
             }
+            progressDialog.dismiss();
             return resUrlList;
         }
         return null;

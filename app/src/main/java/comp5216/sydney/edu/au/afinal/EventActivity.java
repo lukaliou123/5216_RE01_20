@@ -1,15 +1,16 @@
 package comp5216.sydney.edu.au.afinal;
 
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import com.youth.banner.Banner;
 
-import java.util.Date;
+import java.util.ArrayList;
+import java.util.List;
 
 import comp5216.sydney.edu.au.afinal.entity.EventEntity;
 import comp5216.sydney.edu.au.afinal.util.ImageTask;
@@ -27,12 +28,19 @@ public class EventActivity extends AppCompatActivity {
     private TextView description;
     private TextView location;
     private TextView likeNum;
+    private Banner<Bitmap, MyBannerAdapter> banner;
 
+    private List<Bitmap> imageList = new ArrayList<>();
+    private EventEntity eventEntity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event);
+        if(getSupportActionBar() != null){
+            getSupportActionBar().hide();
+        }
+        eventEntity = (EventEntity)getIntent().getSerializableExtra("event");
         initView();
     }
 
@@ -49,14 +57,16 @@ public class EventActivity extends AppCompatActivity {
         description = findViewById(R.id.event_content);
         location = findViewById(R.id.event_text_location);
         likeNum = findViewById(R.id.event_favorite_num);
+        banner = findViewById(R.id.event_banner);
+        banner.setAdapter(new MyBannerAdapter(imageList));
     }
 
     private void show(EventEntity event){
-        username.setText(event.getUsername());
-        date.setText(event.getDate().toString());
+        username.setText(event.getBlogger());
+        date.setText(event.getTimeStamp().toString());
         title.setText(event.getTitle());
         description.setText(event.getDescription());
-        location.setText(event.getAddress());
+        location.setText(event.getLocation());
         likeNum.setText(event.getLikes());
         //show avatar of blogger
 //        new ImageTask(new ImageTask.CallBack() {
@@ -67,8 +77,27 @@ public class EventActivity extends AppCompatActivity {
 //        }).execute(event.getImageUrl());
     }
 
-    private void follow( ){
+    private void loadAvatar(){
 
+
+    }
+
+    private void loadImage(){
+        List<String> imageUrls = eventEntity.getImageUrl();
+        if(imageUrls == null || imageUrls.size() == 0){
+            return;
+        }
+        for(int i = 0; i < imageUrls.size(); i ++){
+            new ImageTask(new ImageTask.CallBack() {
+                @Override
+                public void getResults(Bitmap result, String url) {
+                    imageList.add(result);
+                }
+            }).execute(imageUrls.get(i));
+        }
+    }
+
+    private void follow(){
 
     }
 

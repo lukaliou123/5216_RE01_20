@@ -58,9 +58,9 @@ public class Adapter extends BaseAdapter {
         }
 
         holder.title.setText(events.get(i).getTitle());
-        holder.author.setText(events.get(i).getUsername());
-        holder.time.setText(events.get(i).getDate().toString());
-        holder.address.setText(events.get(i).getAddress());
+        holder.author.setText(events.get(i).getBlogger());
+        holder.time.setText(events.get(i).getTimeStamp().toString());
+        holder.address.setText(events.get(i).getLocation());
         holder.like.setText(events.get(i).getLikes());
 
         return view;

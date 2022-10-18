@@ -302,7 +302,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 String id = document.getId();
                                 IDArraylist.add(id);
-                                GeoPoint geo = (GeoPoint) document.getData().get("location");
+                                GeoPoint geo = (GeoPoint) document.getData().get("geo");
                                 LatLng newLatng = new LatLng(geo.getLatitude(),geo.getLongitude());
                                 System.out.println("id is !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!: "+id);
                                 latLngArrayList.add(newLatng);
@@ -312,18 +312,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                 System.out.println("geo is !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!: "+document.getData().get("location"));
                                 Log.d(TAG, document.getId() + " => " + document.getData());
 
-                                String blogger = (String)document.getData().get("blogger");
+                                String blogger = (String)document.getData().get("Blogger");
+                                String blogger_ref = (String)document.getData().get("blog_ref");
                                 Timestamp timestamp = (Timestamp)document.getData().get("time");
                                 String description = (String)document.getData().get("description");
                                 List<String> imageUrl = (List<String>) document.getData().get("imageUrl");
                                 Integer likes = (Integer)document.getData().get("likes");
-                                String address = (String)document.getData().get("address");
-                                eventsList.add(new EventEntity(blogger,timestamp,title,description,imageUrl,likes,address,geo));
+                                String address = (String)document.getData().get("location");
+                                eventsList.add(new EventEntity(blogger,blogger_ref,description,timestamp,geo,imageUrl,likes,address,title));
                             }
                             if(mMap != null){ //prevent crashing if the map doesn't exist yet (eg. on starting activity)
                                 mMap.clear();
-
-
                             }
                             // add markers from database to the map
                             onMapReady(mMap);

@@ -98,8 +98,10 @@
     </RelativeLayout>
 
     <com.youth.banner.Banner
+        android:id="@+id/event_banner"
         android:layout_width="match_parent"
-        android:layout_height="260dp"/>
+        android:layout_height="260dp"
+        app:banner_radius="20dp"/>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"

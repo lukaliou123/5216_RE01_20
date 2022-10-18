@@ -56,13 +56,14 @@ public class Firebase {
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 GeoPoint geo = (GeoPoint) document.getData().get("location");
                                 String title = (String) document.getData().get("title");
-                                String blogger = (String) document.getData().get("blogger");
+                                String blogRef = (String) document.getData().get("blog_ref");
+                                String blogger = (String) document.getData().get("Blogger");
                                 Timestamp timestamp = (Timestamp) document.getData().get("time");
                                 String description = (String) document.getData().get("description");
                                 List<String> imageUrl = (List<String>) document.getData().get("imageUrl");
                                 Integer likes = (Integer) document.getData().get("likes");
                                 String address = (String) document.getData().get("address");
-                                events.add(new EventEntity(blogger, timestamp, title, description, imageUrl, likes, address, geo));
+                                events.add(new EventEntity(blogger,blogRef,description,timestamp,geo,imageUrl,likes,address,title));
                             }
                         } else {
                             Log.d("Firebase", "Error getting documents: ", task.getException());
@@ -71,4 +72,6 @@ public class Firebase {
                 });
         return events;
     }
+
+
 }
