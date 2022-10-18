@@ -74,8 +74,11 @@ public class RegisterActivity extends AppCompatActivity {
         String username = name.getText().toString();
         String code = password.getText().toString();
         String vCode = vPassword.getText().toString();
-        if (email.equals("")||username.equals(""))
+        if (email.equals("")||username.equals("")){
+            Toast.makeText(RegisterActivity.this, "name or email is empty",
+                    Toast.LENGTH_SHORT).show();
             return;
+        }
         else if(!code.equals(vCode)){
             Toast.makeText(RegisterActivity.this, "Passwords are not same",
                     Toast.LENGTH_SHORT).show();
@@ -137,20 +140,5 @@ public class RegisterActivity extends AppCompatActivity {
 //        });
     }
 
-//    private void upload() {
-//
-//        Intent intent = new Intent(Intent.ACTION_PICK);
-//        intent.setType(MediaStore.Images.Media.CONTENT_TYPE);
-//        startActivityForResult(intent, 10);
-//    }
-
-//    @Override
-//    protected  void onActivityResult(int requestCode, int resultCode, Intent data){
-//        super.onActivityResult(requestCode, resultCode, data);
-//        if(requestCode==10 && resultCode== RESULT_OK){
-//            profile.setImageURI(data.getData());
-//            imageUri = data.getData();
-//        }
-//    }
 
 }
