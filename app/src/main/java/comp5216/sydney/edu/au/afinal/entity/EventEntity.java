@@ -1,46 +1,57 @@
 package comp5216.sydney.edu.au.afinal.entity;
 
-import android.location.Location;
 
-import java.util.Date;
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+
+import com.google.firebase.Timestamp;
+import com.google.firebase.firestore.GeoPoint;
+
+import java.util.List;
 import java.util.Objects;
-
+@Entity(tableName = "Events")
 public class EventEntity {
-    private String username;
-    private Date date;
+    @ColumnInfo(name = "Blogger")
+    private String Blogger;
+    @ColumnInfo(name = "timeStamp")
+    private Timestamp timeStamp;
+    @ColumnInfo(name = "title")
     private String title;
+    @ColumnInfo(name = "description")
     private String description;
-    private String imageUrl;
+    @ColumnInfo(name = "imageUrl")
+    private List<String> imageUrl;
+    @ColumnInfo(name = "likes")
     private int likes;
-    private String address;
-    private Location location;
+    @ColumnInfo(name = "geo")
+    private GeoPoint geo;
+    @ColumnInfo(name = "location")
+    private String location;
+    @ColumnInfo(name = "blog_ref")
+    private String blog_ref;
 
-    public EventEntity(String username, Date date, String title, String description, String imageUrl,
-                       int likes, String address, Location location) {
-        this.username = username;
-        this.date = date;
-        this.title = title;
-        this.description = description;
-        this.imageUrl = imageUrl;
-        this.likes = likes;
-        this.address = address;
-        this.location = location;
+    public String getBlog_ref() {
+        return blog_ref;
     }
 
-    public String getUsername() {
-        return username;
+    public void setBlog_ref(String blog_ref) {
+        this.blog_ref = blog_ref;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public String getBlogger() {
+        return Blogger;
     }
 
-    public Date getDate() {
-        return date;
+    public void setBlogger(String blogger) {
+        this.Blogger = blogger;
     }
 
-    public void setDate(Date date) {
-        this.date = date;
+    public Timestamp getTimeStamp() {
+        return timeStamp;
+    }
+
+    public void setTimeStamp(Timestamp timeStamp) {
+        this.timeStamp = timeStamp;
     }
 
     public String getTitle() {
@@ -59,11 +70,11 @@ public class EventEntity {
         this.description = description;
     }
 
-    public String getImageUrl() {
+    public List<String> getImageUrl() {
         return imageUrl;
     }
 
-    public void setImageUrl(String imageUrl) {
+    public void setImageUrl(List<String> imageUrl) {
         this.imageUrl = imageUrl;
     }
 
@@ -75,19 +86,19 @@ public class EventEntity {
         this.likes = likes;
     }
 
-    public String getAddress() {
-        return address;
+    public GeoPoint getGeo() {
+        return geo;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
+    public void setGeo(GeoPoint geo) {
+        this.geo = geo;
     }
 
-    public Location getLocation() {
+    public String getLocation() {
         return location;
     }
 
-    public void setLocation(Location location) {
+    public void setLocation(String location) {
         this.location = location;
     }
 
@@ -96,14 +107,14 @@ public class EventEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         EventEntity that = (EventEntity) o;
-        return likes == that.likes && Objects.equals(username, that.username) && Objects.equals(date,
-                that.date) && Objects.equals(title, that.title) && Objects.equals(description, that.description)
-                && Objects.equals(imageUrl, that.imageUrl) && Objects.equals(address, that.address) &&
+        return likes == that.likes && Objects.equals(Blogger, that.Blogger) && Objects.equals(timeStamp,
+                that.timeStamp) && Objects.equals(title, that.title) && Objects.equals(description, that.description)
+                && Objects.equals(imageUrl, that.imageUrl) && Objects.equals(geo, that.geo) &&
                 Objects.equals(location, that.location);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(username, date, title, description, imageUrl, likes, address, location);
+        return Objects.hash(Blogger, timeStamp, title, description, imageUrl, likes, geo, location);
     }
 }

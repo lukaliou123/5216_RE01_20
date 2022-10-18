@@ -2,14 +2,20 @@ package comp5216.sydney.edu.au.afinal;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -29,6 +35,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import comp5216.sydney.edu.au.afinal.entity.Account;
+import comp5216.sydney.edu.au.afinal.entity.EventEntity;
 import comp5216.sydney.edu.au.afinal.entity.FollowRelationItem;
 
 public class HomePageActivity extends AppCompatActivity {
@@ -36,12 +43,16 @@ public class HomePageActivity extends AppCompatActivity {
     int loginAccountId = 1;
     int viewAccountId = 2;
     Account loginAccount, tobefollowAccount;
+    String loginAccountPath, tobefollowAccountPath;
     ArrayList<Integer> followerIDs = new ArrayList<>();
     ArrayList<Integer> followingIDs = new ArrayList<>();
+    ArrayList<EventEntity> events = new ArrayList<>();
     File localFile = null;
     Button followBtn;
     boolean followed = false;
     public static final int  REQUEST_CODE_FOLLOWING = 527;
+    EventAdapter eventAdapter;
+
 
     public void onFollowingClick(View view) {
         getAndShowAccounts(followingIDs);
@@ -153,6 +164,9 @@ public class HomePageActivity extends AppCompatActivity {
         mFireDB = FirebaseFirestore.getInstance();
         ImageView imageView = findViewById(R.id.IconImageView);
         followBtn = findViewById(R.id.FollowButton);
+        eventAdapter = new EventAdapter(events, this);
+        ListView listViewEvents = findViewById(R.id.lstViewEvent);
+        listViewEvents.setAdapter(eventAdapter);
 
         mFireDB.collection("Accounts").whereEqualTo("AccountID", loginAccountId).get().addOnCompleteListener(
                 new OnCompleteListener<QuerySnapshot>() {
@@ -163,6 +177,7 @@ public class HomePageActivity extends AppCompatActivity {
                             for(QueryDocumentSnapshot doc : task.getResult())
                             {
                                 loginAccount = doc.toObject(Account.class);
+                                loginAccountPath = doc.getId();
                                 break;
                             }
                         }
@@ -181,6 +196,7 @@ public class HomePageActivity extends AppCompatActivity {
                             for(QueryDocumentSnapshot doc : task.getResult())
                             {
                                 tobefollowAccount = doc.toObject(Account.class);
+                                tobefollowAccountPath = doc.getId();
                                 TextView textViewName = findViewById(R.id.NameTextView);
                                 textViewName.setText(tobefollowAccount.getName());
 
@@ -192,6 +208,7 @@ public class HomePageActivity extends AppCompatActivity {
 
                                 refreshFollowingStatusUI();
                                 refreshFollowerStatusUI();
+                                refreshEventsUI();
 
                                 StorageReference storageReference = FirebaseStorage.getInstance().getReferenceFromUrl(tobefollowAccount.getIcon());
                                 storageReference.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
@@ -213,6 +230,25 @@ public class HomePageActivity extends AppCompatActivity {
                     }}
         );
     }
+
+    private void refreshEventsUI() {
+        mFireDB.collection("Events").whereEqualTo("blog_ref", tobefollowAccountPath).get().addOnCompleteListener(
+                new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if(task.isSuccessful()) {
+                            events.clear();
+                            for (QueryDocumentSnapshot doc : task.getResult()) {
+                                EventEntity event = doc.toObject(EventEntity.class);
+                                events.add(event);
+                            }
+                            eventAdapter.notifyDataSetChanged();
+                        }
+                    }
+                }
+        );
+    }
+
     void refreshFollowingStatusUI()
     {
         mFireDB.collection("FollowRelation").whereEqualTo("followerID", viewAccountId).get().addOnCompleteListener(
@@ -275,6 +311,36 @@ public class HomePageActivity extends AppCompatActivity {
         if(viewAccountId != newAccountID) {
             viewAccountId = newAccountID;
             refreshViewAccountUI();
+        }
+    }
+
+    public class EventAdapter extends ArrayAdapter<EventEntity> implements View.OnClickListener{
+
+        public EventAdapter(ArrayList<EventEntity> data, Context context) {
+            super(context, R.layout.activity_follow_event, data);
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            // Get the data item for this position
+            EventEntity event = getItem(position);
+            if (convertView == null) {
+                convertView = LayoutInflater.from(getContext()).inflate(R.layout.activity_follow_event, parent, false);
+            }
+            TextView Title  = convertView.findViewById(R.id.eventTitle);
+            Title.setText(event.getTitle());
+            TextView Description = convertView.findViewById(R.id.eventDesciption);
+            Description.setText(event.getDescription());
+            TextView Like = convertView.findViewById(R.id.eventLike);
+            Like.setText(Integer.toString(event.getLikes()));
+
+            // Return the completed view to render on screen
+            return convertView;
+        }
+
+        @Override
+        public void onClick(View view) {
+
         }
     }
 
