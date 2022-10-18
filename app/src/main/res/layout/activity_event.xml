@@ -97,16 +97,9 @@
 
     </RelativeLayout>
 
-    <com.makeramen.roundedimageview.RoundedImageView
-        android:id="@+id/event_image"
+    <com.youth.banner.Banner
         android:layout_width="match_parent"
-        android:layout_height="260dp"
-        android:src="@color/black"
-        app:riv_corner_radius_bottom_left="20dp"
-        app:riv_corner_radius_bottom_right="20dp"
-        app:riv_corner_radius_top_left="20dp"
-        app:riv_corner_radius_top_right="20dp"
-        />
+        android:layout_height="260dp"/>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -142,7 +135,7 @@
             app:layout_constraintVertical_bias="0.148" >
 
             <EditText
-                android:id="@+id/content"
+                android:id="@+id/event_content"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ems="10"
@@ -165,7 +158,7 @@
             app:layout_constraintVertical_bias="0.985" />
 
         <TextView
-            android:id="@+id/text_location"
+            android:id="@+id/event_text_location"
             android:layout_width="wrap_content"
             android:layout_height="20dp"
             android:text="location"

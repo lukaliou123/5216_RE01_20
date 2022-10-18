@@ -31,7 +31,6 @@ public class AddActivity extends AppCompatActivity {
     private EditText title;
     private EditText content;
     private TextView location;
-
     private Bitmap image;
 
     @Override
@@ -45,9 +44,9 @@ public class AddActivity extends AppCompatActivity {
         cancel = findViewById(R.id.add_tit_cancel);
         confirm = findViewById(R.id.add_tit_confirm);
         selectImageBtn = findViewById(R.id.add_btn);
-        imageView = findViewById(R.id.add_image);
+        //imageView = findViewById(R.id.add_image);
         title = findViewById(R.id.add_title);
-        content = findViewById(R.id.content);
+        content = findViewById(R.id.add_content);
         location = findViewById(R.id.add_text_location);
         cancel.setOnClickListener(view -> onBackPressed());
         confirm.setOnClickListener(view -> uploadData());
@@ -56,7 +55,11 @@ public class AddActivity extends AppCompatActivity {
 
 
     private void uploadData(){
-           //TODO
+        String titleVal = title.getText().toString();
+        String description = content.getText().toString();
+        
+
+
     }
 
     private void chooseImage(){

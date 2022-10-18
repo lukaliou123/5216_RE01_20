@@ -7,21 +7,24 @@ import com.google.firebase.firestore.GeoPoint;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 
 public class EventEntity implements Serializable {
-    private String username;
+    private String blogger;
     private Timestamp time;
     private String title;
     private String description;
-    private String imageUrl;
+    private List<String> imageUrl;
     private int likes;
     private String address;
     private GeoPoint location;
 
-    public EventEntity(String username, Timestamp time, String title, String description, String imageUrl,
+    public EventEntity(){}
+
+    public EventEntity(String blogger, Timestamp time, String title, String description, List<String> imageUrl,
                        int likes, String address, GeoPoint location) {
-        this.username = username;
+        this.blogger = blogger;
         this.time = time;
         this.title = title;
         this.description = description;
@@ -32,11 +35,11 @@ public class EventEntity implements Serializable {
     }
 
     public String getUsername() {
-        return username;
+        return blogger;
     }
 
     public void setUsername(String username) {
-        this.username = username;
+        this.blogger = username;
     }
 
     public Timestamp getDate() {
@@ -63,11 +66,11 @@ public class EventEntity implements Serializable {
         this.description = description;
     }
 
-    public String getImageUrl() {
+    public List<String> getImageUrl() {
         return imageUrl;
     }
 
-    public void setImageUrl(String imageUrl) {
+    public void setImageUrl(List<String> imageUrl) {
         this.imageUrl = imageUrl;
     }
 
@@ -100,7 +103,7 @@ public class EventEntity implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         EventEntity that = (EventEntity) o;
-        return likes == that.likes && Objects.equals(username, that.username) && Objects.equals(time,
+        return likes == that.likes && Objects.equals(blogger, that.blogger) && Objects.equals(time,
                 that.time) && Objects.equals(title, that.title) && Objects.equals(description, that.description)
                 && Objects.equals(imageUrl, that.imageUrl) && Objects.equals(address, that.address) &&
                 Objects.equals(location, that.location);
@@ -108,6 +111,6 @@ public class EventEntity implements Serializable {
 
     @Override
     public int hashCode() {
-        return Objects.hash(username, time, title, description, imageUrl, likes, address, location);
+        return Objects.hash(blogger, time, title, description, imageUrl, likes, address, location);
     }
 }

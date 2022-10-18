@@ -6,6 +6,7 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
@@ -166,6 +167,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 // which is clicked and displaying it in a toast message.
                 String markerName = marker.getTitle();
                 EventEntity event = eventsList.get(Integer.parseInt(marker.getId()));
+                Intent intent = new Intent(MapsActivity.this, EventActivity.class);
+                intent.putExtra("event",event);
+                startActivity(intent);
                 Toast.makeText(MapsActivity.this, "Event title is:  " + markerName, Toast.LENGTH_SHORT).show();
                 return false;
             }
@@ -298,7 +302,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 String id = document.getId();
                                 IDArraylist.add(id);
-                                GeoPoint geo = (GeoPoint) document.getData().get("geo");
+                                GeoPoint geo = (GeoPoint) document.getData().get("location");
                                 LatLng newLatng = new LatLng(geo.getLatitude(),geo.getLongitude());
                                 System.out.println("id is !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!: "+id);
                                 latLngArrayList.add(newLatng);
@@ -308,14 +312,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                 System.out.println("geo is !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!: "+document.getData().get("location"));
                                 Log.d(TAG, document.getId() + " => " + document.getData());
 
-                                String blogger = (String)document.getData().get("Blogger");
-                                Timestamp timestamp = (Timestamp)document.getData().get("timeStamp");
+                                String blogger = (String)document.getData().get("blogger");
+                                Timestamp timestamp = (Timestamp)document.getData().get("time");
                                 String description = (String)document.getData().get("description");
-                                String imageUrl = (String)document.getData().get("imageUrl");
+                                List<String> imageUrl = (List<String>) document.getData().get("imageUrl");
                                 Integer likes = (Integer)document.getData().get("likes");
-                                String address = (String)document.getData().get("location");
-                                GeoPoint location = (GeoPoint) document.getData().get("geo");
-                                eventsList.add(new EventEntity(blogger,timestamp,title,description,imageUrl,likes,address,location));
+                                String address = (String)document.getData().get("address");
+                                eventsList.add(new EventEntity(blogger,timestamp,title,description,imageUrl,likes,address,geo));
                             }
                             if(mMap != null){ //prevent crashing if the map doesn't exist yet (eg. on starting activity)
                                 mMap.clear();

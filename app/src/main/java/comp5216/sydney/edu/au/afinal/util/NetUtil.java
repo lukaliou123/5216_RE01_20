@@ -20,7 +20,8 @@ import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import java.io.File;
-
+import java.util.ArrayList;
+import java.util.List;
 
 
 import comp5216.sydney.edu.au.afinal.entity.EventEntity;
@@ -28,7 +29,7 @@ import comp5216.sydney.edu.au.afinal.entity.EventEntity;
 public class NetUtil {
 
 
-    public static void uploadMediaFile(String filePath, Context context){
+    public static String uploadMediaFile(String filePath, Context context){
         if(filePath != null)
         {
             //Firebase
@@ -36,18 +37,19 @@ public class NetUtil {
             final ProgressDialog progressDialog = new ProgressDialog(context);
             progressDialog.setTitle("Uploading to firebase...");
             progressDialog.show();
+            final String[] resUrl = {null};
             StorageReference ref = storageReference.child("images/" + new File(filePath).getName());
             ref.putFile(Uri.fromFile(new File(filePath)))
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                             progressDialog.dismiss();
-
                             ref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                                 @Override
                                 public void onSuccess(Uri uri) {
                                     //get the url of the file we have uploaded
                                     Log.e("uri",uri.getPath());
+                                    resUrl[0] = uri.getPath();
                                 }
                             });
                             Toast.makeText(context, "Uploaded", Toast.LENGTH_SHORT).show();
@@ -68,7 +70,34 @@ public class NetUtil {
                             progressDialog.setMessage("Uploaded "+(int)progress+"%");
                         }
                     });
+            return resUrl[0];
         }
+        return  null;
+    }
+
+    public static List<String> uploadMediaFiles(List<String> filePaths){
+        if(filePaths != null && filePaths.size() != 0){
+            List<String> resUrlList = new ArrayList<>(filePaths.size());
+            StorageReference storageReference =  FirebaseStorage.getInstance().getReference();
+            for(int i = 0; i < filePaths.size(); i ++){
+                StorageReference ref = storageReference.child("images/" + new File(filePaths.get(i)).getName());
+                ref.putFile(Uri.fromFile(new File(filePaths.get(i)))).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        ref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                            @Override
+                            public void onSuccess(Uri uri) {
+                                //get the url of the file we have uploaded
+                                Log.e("uri",uri.getPath());
+                                resUrlList.add(uri.getPath());
+                            }
+                        });
+                    }
+                });
+            }
+            return resUrlList;
+        }
+        return null;
     }
 
     public static void uploadEvent(EventEntity event){
@@ -83,17 +112,6 @@ public class NetUtil {
         ref.set(event);
     }
 
-    public static EventEntity getEvent(String documentID){
-        FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
-        DocumentReference ref = firebaseFirestore.collection("Events").document(documentID);
-        ref.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-
-            }
-        });
-        return null;
-    }
 
 
 

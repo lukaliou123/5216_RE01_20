@@ -45,15 +45,11 @@
             />
     </RelativeLayout>
 
-    <com.makeramen.roundedimageview.RoundedImageView
-        android:id="@+id/add_image"
+    <com.youth.banner.Banner
+        android:id="@+id/add_banner"
         android:layout_width="match_parent"
-        android:layout_height="260dp"
-        app:riv_corner_radius_bottom_left="20dp"
-        app:riv_corner_radius_bottom_right="20dp"
-        app:riv_corner_radius_top_left="20dp"
-        app:riv_corner_radius_top_right="20dp"
-        />
+        android:layout_height="260dp"/>
+
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
