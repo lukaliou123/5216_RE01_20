@@ -14,8 +14,7 @@
         android:textAlignment="center"
         app:layout_constraintBottom_toTopOf="@id/list_view"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <ListView
         android:id="@+id/list_view"
@@ -23,47 +22,9 @@
         android:layout_height="match_parent"
         android:layout_marginTop="50dp"
         android:layout_weight="1"
-        app:layout_constraintBottom_toTopOf="@id/text_search"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/search_view" />
 
-    <TextView
-        android:id="@+id/text_search"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="4dp"
-        android:textAlignment="center"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent" />
 
-    <!--    <LinearLayout-->
-<!--        android:id="@+id/id_ll_title_layout"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        app:layout_constraintTop_toTopOf="parent"-->
-<!--        android:background="@android:color/transparent"-->
-<!--        android:gravity="right"-->
-<!--        android:orientation="horizontal">-->
-
-<!--        <RelativeLayout-->
-<!--            android:id="@+id/id_title_layout"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:paddingRight="10dp"-->
-<!--            android:paddingLeft="10dp"-->
-<!--            android:gravity="center"-->
-<!--            android:layout_marginTop="5dp"-->
-<!--            android:layout_marginBottom="5dp"-->
-<!--            android:layout_marginRight="16dp"-->
-<!--            >-->
-
-
-<!--        </RelativeLayout>-->
-
-<!--    </LinearLayout>-->
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -47,6 +47,7 @@
                 android:fontFamily="sans-serif-black"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/time"
                 tools:ignore="RtlSymmetry" />
 
             <TextView
@@ -78,9 +79,11 @@
         android:id="@+id/like"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:paddingEnd="16dp"
+        android:paddingTop="30dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/lo"
-        app:drawableLeftCompat="@drawable/favorite_active" />
+        app:drawableRightCompat="@drawable/ic_outline_thumb_up_alt_24" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

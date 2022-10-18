@@ -42,13 +42,12 @@ public class SearchFragment extends Fragment {
         binding = FragmentSearchBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        final TextView textView = binding.textSearch;
         searchView = binding.searchView;
         listView = binding.listView;
-        events = Firebase.getInstance().getAllEvents();
-        searchViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
+        events = new ArrayList<>();
         eventsAdapter = new Adapter(this.getContext(), events);
         listView.setAdapter(eventsAdapter);
+        Firebase.getInstance().getAllEvents(events, eventsAdapter);
         listView.setTextFilterEnabled(true);
         setupSearchView();
         listViewListener();
@@ -67,8 +66,9 @@ public class SearchFragment extends Fragment {
             public boolean onQueryTextChange(String newText) {
                 if (TextUtils.isEmpty(newText)) {
                     listView.clearTextFilter();
+                    eventsAdapter.getFilter().filter("");
                 } else {
-                    listView.setFilterText(newText.toString());
+                    eventsAdapter.getFilter().filter(newText);
                 }
                 return true;
             }

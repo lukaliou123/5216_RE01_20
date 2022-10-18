@@ -2,27 +2,34 @@ package comp5216.sydney.edu.au.afinal.util;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.provider.CalendarContract;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.CheckBox;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import comp5216.sydney.edu.au.afinal.entity.EventEntity;
 import comp5216.sydney.edu.au.afinal.R;
 import comp5216.sydney.edu.au.afinal.ui.search.SearchFragment;
 
-public class Adapter extends BaseAdapter {
-    private final ArrayList<EventEntity> events;
+public class Adapter extends BaseAdapter implements Filterable {
+    private ArrayList<EventEntity> events;
+    private final ArrayList<EventEntity> eventsBackup;
     private final Context mContext;
+    MyFilter mFilter;
 
 
     public Adapter(Context mContext, ArrayList<EventEntity> events){
         this.mContext = mContext;
         this.events = events;
+        eventsBackup = events;
     }
 
     @Override
@@ -59,10 +66,9 @@ public class Adapter extends BaseAdapter {
 
         holder.title.setText(events.get(i).getTitle());
         holder.author.setText(events.get(i).getBlogger());
-        holder.time.setText(events.get(i).getTimeStamp().toString());
+        holder.time.setText(events.get(i).getTimeStamp().toDate().toString());
         holder.address.setText(events.get(i).getLocation());
-        holder.like.setText(events.get(i).getLikes());
-
+        holder.like.setText(String.valueOf(events.get(i).getLikes())+"  ");
         return view;
     }
 
@@ -72,5 +78,45 @@ public class Adapter extends BaseAdapter {
         TextView time;
         TextView address;
         TextView like;
+    }
+
+    @Override
+    public Filter getFilter() {
+        if (mFilter ==null){
+            mFilter = new MyFilter();
+        }
+        return mFilter;
+    }
+
+    class MyFilter extends Filter{
+        @Override
+        protected FilterResults performFiltering(CharSequence charSequence) {
+            FilterResults result = new FilterResults();
+            ArrayList<EventEntity> subEvents;
+            if (TextUtils.isEmpty(charSequence)){
+                subEvents  = eventsBackup;
+            }else {
+                subEvents = new ArrayList<>();
+                for (EventEntity event:eventsBackup){
+                    if (event.getBlogger().contains(charSequence)||event.getTitle().contains(charSequence)||event.getLocation().contains(charSequence)){
+                        subEvents.add(event);
+                    }
+                }
+            }
+            result.values = subEvents;
+            result.count = subEvents.size();
+            return result;
+        }
+        @Override
+        protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
+            if (filterResults.count>0){
+                events = (ArrayList<EventEntity>)filterResults.values;
+                notifyDataSetChanged();
+            }
+            else {
+                events = new ArrayList<>();
+                notifyDataSetChanged();
+            }
+        }
     }
 }
