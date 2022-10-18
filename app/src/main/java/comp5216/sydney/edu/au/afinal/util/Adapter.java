@@ -98,7 +98,7 @@ public class Adapter extends BaseAdapter implements Filterable {
             }else {
                 subEvents = new ArrayList<>();
                 for (EventEntity event:eventsBackup){
-                    if (event.getBlogger().contains(charSequence)||event.getTitle().contains(charSequence)||event.getLocation().contains(charSequence)){
+                    if (event.getBlogger().toLowerCase().contains(charSequence)||event.getTitle().toLowerCase().contains(charSequence)||event.getLocation().toLowerCase().contains(charSequence)){
                         subEvents.add(event);
                     }
                 }
