@@ -29,6 +29,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.io.IOException;
@@ -338,25 +339,15 @@ public class HomePageActivity extends AppCompatActivity {
 
             if(event.getImageUrl().size() > 0) {
                 StorageReference storageReference = FirebaseStorage.getInstance().getReferenceFromUrl(event.getImageUrl().get(0));
-                File tempFile = null;
-                try {
-                    tempFile = File.createTempFile("images", "jpg");
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                File finalTempFile = tempFile;
-                storageReference.getFile(tempFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                        ImageView iv = findViewById(R.id.eventImageView);
-                        iv.setImageURI(Uri.fromFile(finalTempFile));
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception exception) {
-                        Log.e(" c", "cant get file");
-                    }
-                });
+                ImageView iv = convertView.findViewById(R.id.eventImageView);
+                storageReference.getDownloadUrl().addOnSuccessListener(
+                        new OnSuccessListener<Uri>() {
+                            @Override
+                            public void onSuccess(Uri uri) {
+                                Picasso.get().load(uri).into(iv);
+                            }
+                        }
+                );
             }
 
             // Return the completed view to render on screen
