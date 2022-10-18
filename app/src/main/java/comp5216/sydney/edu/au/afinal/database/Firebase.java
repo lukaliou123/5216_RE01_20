@@ -1,6 +1,7 @@
 package comp5216.sydney.edu.au.afinal.database;
 
 import android.util.Log;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 
@@ -8,6 +9,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -25,12 +28,14 @@ public class Firebase {
     private FirebaseFirestore mFirestore;
     private FirebaseStorage storage;
     private StorageReference storageRef;
+    private FirebaseAuth mAuth;
     private static Firebase mFirebase;
 
     private Firebase(){
         mFirestore = FirebaseFirestore.getInstance();
         storage = FirebaseStorage.getInstance();
         storageRef = storage.getReference();
+        mAuth=FirebaseAuth.getInstance();
     }
 
     public static void init() {
@@ -45,6 +50,15 @@ public class Firebase {
         }return mFirebase;
     }
 
+
+    public FirebaseUser getCurrentUser(){
+        return mAuth.getCurrentUser();
+    }
+
+
+    public void logout(){
+        mAuth.signOut();
+    }
 
     public void getAllEvents( ArrayList<EventEntity> events, Adapter eventsAdapter){
         mFirestore.collection("Events")
