@@ -14,8 +14,8 @@ public class EventEntity implements Serializable {
     private String Blogger;
     private String blog_ref;
     private String description;
-    private Timestamp timeStamp;
-    private GeoPoint geo;
+    private transient Timestamp timeStamp;
+    private transient GeoPoint geo;
     private List<String> imageUrl;
     private Integer likes;
     private String location;

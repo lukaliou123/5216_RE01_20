@@ -44,6 +44,7 @@ import com.google.android.gms.location.FusedLocationProviderClient;
 
 import comp5216.sydney.edu.au.afinal.databinding.ActivityMapsBinding;
 import comp5216.sydney.edu.au.afinal.entity.EventEntity;
+import comp5216.sydney.edu.au.afinal.entity.Events;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
@@ -63,7 +64,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private ArrayList<LatLng> latLngArrayList;
     private ArrayList<String> locationNameArraylist;
     private ArrayList<String> IDArraylist;
-    private HashMap<Integer,String> map = new HashMap<>();
+    private HashMap<String,EventEntity> map = new HashMap<>();
     private ArrayList<EventEntity> eventsList;
 
     private FirebaseFirestore mFirestore;
@@ -154,7 +155,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             // adding marker to each location on google maps
            // "Even title:  " +
-                    mMap.addMarker(new MarkerOptions().position(latLngArrayList.get(i)).title(locationNameArraylist.get(i)));
+
+            mMap.addMarker(new MarkerOptions().position(latLngArrayList.get(i)).title(locationNameArraylist.get(i)));
+
             // below line is use to move camera.
             mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
         }
@@ -166,7 +169,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 // on marker click we are getting the title of our marker
                 // which is clicked and displaying it in a toast message.
                 String markerName = marker.getTitle();
-                EventEntity event = eventsList.get(Integer.parseInt(marker.getId()));
+                EventEntity event = map.get(markerName);
+                Events events = Events.getSingleton();
+                events.add(event);
                 Intent intent = new Intent(MapsActivity.this, EventActivity.class);
                 intent.putExtra("event",event);
                 startActivity(intent);
@@ -300,11 +305,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot document : task.getResult()) {
-                                String id = document.getId();
-                                IDArraylist.add(id);
+//                                String id = document.getId();
+//                                IDArraylist.add(id);
                                 GeoPoint geo = (GeoPoint) document.getData().get("geo");
                                 LatLng newLatng = new LatLng(geo.getLatitude(),geo.getLongitude());
-                                System.out.println("id is !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!: "+id);
+//                                System.out.println("id is !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!: "+id);
                                 latLngArrayList.add(newLatng);
                                 String title = (String)document.getData().get("title");
                                 System.out.println("title is !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!: "+title);
@@ -314,12 +319,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                                 String blogger = (String)document.getData().get("Blogger");
                                 String blogger_ref = (String)document.getData().get("blog_ref");
-                                Timestamp timestamp = (Timestamp)document.getData().get("time");
+                                Timestamp timestamp = (Timestamp)document.getData().get("timeStamp");
                                 String description = (String)document.getData().get("description");
                                 List<String> imageUrl = (List<String>) document.getData().get("imageUrl");
-                                Integer likes = (Integer)document.getData().get("likes");
+                                long likesInLong = (Long)document.getData().get("likes");
+                                Integer likes = (int) likesInLong;
                                 String address = (String)document.getData().get("location");
-                                eventsList.add(new EventEntity(blogger,blogger_ref,description,timestamp,geo,imageUrl,likes,address,title));
+                                EventEntity newEvent = new EventEntity(blogger,blogger_ref,description,timestamp,geo,imageUrl,likes,address,title);
+                                //eventsList.add();
+                                map.put(title,newEvent);
                             }
                             if(mMap != null){ //prevent crashing if the map doesn't exist yet (eg. on starting activity)
                                 mMap.clear();

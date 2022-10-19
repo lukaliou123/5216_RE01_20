@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import comp5216.sydney.edu.au.afinal.entity.EventEntity;
+import comp5216.sydney.edu.au.afinal.entity.Events;
 import comp5216.sydney.edu.au.afinal.util.ImageTask;
 
 public class EventActivity extends AppCompatActivity {
@@ -40,8 +41,12 @@ public class EventActivity extends AppCompatActivity {
         if(getSupportActionBar() != null){
             getSupportActionBar().hide();
         }
-        eventEntity = (EventEntity)getIntent().getSerializableExtra("event");
+        Events events = Events.getSingleton();
+
+        eventEntity = events.get();//(EventEntity)getIntent().getSerializableExtra("event");
         initView();
+        show(eventEntity);
+        loadImage();
     }
 
 
@@ -67,7 +72,7 @@ public class EventActivity extends AppCompatActivity {
         title.setText(event.getTitle());
         description.setText(event.getDescription());
         location.setText(event.getLocation());
-        likeNum.setText(event.getLikes());
+        likeNum.setText(event.getLikes()+"");
         //show avatar of blogger
 //        new ImageTask(new ImageTask.CallBack() {
 //            @Override
