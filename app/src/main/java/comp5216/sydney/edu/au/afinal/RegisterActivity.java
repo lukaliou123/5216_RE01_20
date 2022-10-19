@@ -52,6 +52,7 @@ public class RegisterActivity extends AppCompatActivity {
         name=findViewById(R.id.name);
         profile=findViewById(R.id.img_profile);
         mAuth = FirebaseAuth.getInstance();
+        imageUri = null;
         profile.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
@@ -87,6 +88,11 @@ public class RegisterActivity extends AppCompatActivity {
         }
         else if(!code.equals(vCode)){
             Toast.makeText(RegisterActivity.this, "Passwords are not same",
+                    Toast.LENGTH_SHORT).show();
+            return;
+        }
+        else if (imageUri == null){
+            Toast.makeText(RegisterActivity.this, "please select a profile photo",
                     Toast.LENGTH_SHORT).show();
             return;
         }
