@@ -21,9 +21,11 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.concurrent.CompletableFuture;
 
+import comp5216.sydney.edu.au.afinal.AddActivity;
 import comp5216.sydney.edu.au.afinal.MapsActivity;
 import comp5216.sydney.edu.au.afinal.NavigatorBase;
 import comp5216.sydney.edu.au.afinal.databinding.FragmentHomeBinding;
+import comp5216.sydney.edu.au.afinal.ui.profile.EditProfileActivity;
 
 public class HomeFragment extends Fragment {
 
@@ -37,8 +39,8 @@ public class HomeFragment extends Fragment {
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        final TextView textView = binding.textHome;
-        homeViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
+        //final TextView textView = binding.textHome;
+        //homeViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
         return root;
     }
 
@@ -49,6 +51,10 @@ public class HomeFragment extends Fragment {
     }
 
 
+    public void mapActivityLaunch(View view) {
+    }
 
 
+    public void add_button_home_launch(View view) {
+    }
 }

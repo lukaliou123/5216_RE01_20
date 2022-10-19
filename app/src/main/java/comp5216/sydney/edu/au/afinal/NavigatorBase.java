@@ -41,6 +41,11 @@ public class NavigatorBase extends AppCompatActivity {
         startActivity(intent);
     }
 
+    public void add_button_home_launch(View v) {
+        Intent intent = new Intent(NavigatorBase.this, AddActivity.class);
+        startActivity(intent);
+    }
+
 
     public void logout(View v){
         Firebase.getInstance().logout();
