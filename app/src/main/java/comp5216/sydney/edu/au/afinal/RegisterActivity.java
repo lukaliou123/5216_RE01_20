@@ -22,9 +22,12 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+
+import comp5216.sydney.edu.au.afinal.database.Firebase;
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -91,6 +94,23 @@ public class RegisterActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             Log.d(TAG, "createUserWithEmail:success");
+                            FirebaseUser firebaseuser = Firebase.getInstance().getCurrentUser();
+                            String uid = firebaseuser.getUid();
+                            if(imageUri != null){
+                                Task<Uri> uriTask = Firebase.getInstance().uploadPhotoToStorage(uid, imageUri);
+                                uriTask.addOnCompleteListener(new OnCompleteListener<Uri>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Uri> task) {
+                                        if (task.isSuccessful()) {
+                                            Firebase.getInstance().createAccountSnapshotInFireStore(uid, username, task.getResult().toString(),email);
+                                        }else{
+                                            Log.d("Firebase", "task failed");
+                                        }
+                                    }
+                                });
+                            }else{
+                                Firebase.getInstance().createAccountSnapshotInFireStore(uid, username, "",email);
+                            }
                             finish();
                         } else {
                             Log.w(TAG, "createUserWithEmail:failure", task.getException());

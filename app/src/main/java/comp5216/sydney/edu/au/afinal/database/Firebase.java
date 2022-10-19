@@ -1,25 +1,35 @@
 package comp5216.sydney.edu.au.afinal.database;
 
+import android.net.Uri;
 import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.NonNull;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 import comp5216.sydney.edu.au.afinal.entity.EventEntity;
 import comp5216.sydney.edu.au.afinal.util.Adapter;
@@ -53,6 +63,53 @@ public class Firebase {
 
     public FirebaseUser getCurrentUser(){
         return mAuth.getCurrentUser();
+    }
+
+    public Task<Uri> uploadPhotoToStorage(String uid, Uri uri){
+        if (uri == null){
+            return null;
+        }
+        StorageReference photoRef = storageRef.child("images/" + uid + "/" +uri.getLastPathSegment());
+        UploadTask uploadTask = photoRef.putFile(uri);
+        Task<Uri> uriTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+            @Override
+            public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                if (!task.isSuccessful()) {
+                    throw Objects.requireNonNull(task.getException());
+                }
+                return photoRef.getDownloadUrl();
+            }
+        }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+            @Override
+            public void onComplete(@NonNull Task<Uri> task) {
+                if (task.isSuccessful()) {
+                    Log.d("Firebase", "Photo uploaded");
+                }
+            }
+        });
+        return uriTask;
+    }
+
+    public void createAccountSnapshotInFireStore(String id, String username, String icon, String email){
+        CollectionReference accounts = mFirestore.collection("Accounts");
+        Map<String, String> account = new HashMap<>();
+        account.put("AccountID", id);
+        account.put("Username", username);
+        account.put("Email", email);
+        account.put("Icon", icon);
+        account.put("Birth", "");
+        account.put("Gender", "");
+        accounts.add(account).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+            @Override
+            public void onSuccess(DocumentReference documentReference) {
+                Log.d("Firestore", "DocumentSnapshot added with ID: " + documentReference.getId());
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.w("Firestore", "Error adding document", e);
+            }
+        });
     }
 
 

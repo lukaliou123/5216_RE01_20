@@ -19,7 +19,18 @@ public class Account {
 
     private String Gender;
 
+    private String Email;
+
     private String BirthDate;
+
+    public Account(@NonNull String accountID, String name, String icon, String gender, String email, String birthDate) {
+        AccountID = accountID;
+        Name = name;
+        Icon = icon;
+        Gender = gender;
+        Email = email;
+        BirthDate = birthDate;
+    }
 
     public String getGender() {
         return Gender;
@@ -29,12 +40,12 @@ public class Account {
         Gender = gender;
     }
 
-    public Account(@NonNull String accountID, String name, String icon, String gender, String birthDate) {
-        AccountID = accountID;
-        Name = name;
-        Icon = icon;
-        Gender = gender;
-        BirthDate = birthDate;
+    public String getEmail() {
+        return Email;
+    }
+
+    public void setEmail(String email) {
+        Email = email;
     }
 
     public String getBirthDate() {
