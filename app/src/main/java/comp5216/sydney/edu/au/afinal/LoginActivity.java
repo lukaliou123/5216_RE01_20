@@ -16,6 +16,8 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import comp5216.sydney.edu.au.afinal.database.Firebase;
+
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -59,6 +61,7 @@ public class LoginActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             Log.d(TAG, "signInWithEmail:success");
                             Intent intent = new Intent(LoginActivity.this, NavigatorBase.class);
+                            Log.d(TAG, Firebase.getInstance().getCurrentUser().getUid());
                             startActivity(intent);
                         } else {
                             Log.w(TAG, "signInWithEmail:failure", task.getException());

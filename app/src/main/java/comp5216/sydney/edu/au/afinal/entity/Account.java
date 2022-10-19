@@ -9,7 +9,7 @@ public class Account {
     @PrimaryKey(autoGenerate = true)
     @NonNull
     @ColumnInfo(name = "AccountID")
-    private int AccountID;
+    private String AccountID;
 
     @ColumnInfo(name = "Name")
     private String Name;
@@ -17,11 +17,40 @@ public class Account {
     @ColumnInfo(name = "icon")
     private String Icon;
 
-    public int getAccountID() {
+    private String Gender;
+
+    private String BirthDate;
+
+    public String getGender() {
+        return Gender;
+    }
+
+    public void setGender(String gender) {
+        Gender = gender;
+    }
+
+    public Account(@NonNull String accountID, String name, String icon, String gender, String birthDate) {
+        AccountID = accountID;
+        Name = name;
+        Icon = icon;
+        Gender = gender;
+        BirthDate = birthDate;
+    }
+
+    public String getBirthDate() {
+        return BirthDate;
+    }
+
+    public void setBirthDate(String birthDate) {
+        BirthDate = birthDate;
+    }
+
+
+    public String getAccountID() {
         return AccountID;
     }
 
-    public void setAccountID(int accountID) {
+    public void setAccountID(String accountID) {
         AccountID = accountID;
     }
 
