@@ -128,7 +128,7 @@ public class HomePageActivity extends AppCompatActivity {
                             for(QueryDocumentSnapshot doc : task.getResult())
                             {
                                 Account cAccount = doc.toObject(Account.class);
-                                accountIDs.add(cAccount.getAccountID());
+                                accountIDs.add(Integer.parseInt(cAccount.getAccountID()));
                                 accountNames.add(cAccount.getName());
                             }
 

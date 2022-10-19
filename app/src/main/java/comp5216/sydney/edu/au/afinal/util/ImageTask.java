@@ -2,7 +2,17 @@ package comp5216.sydney.edu.au.afinal.util;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.AsyncTask;
+import android.widget.ImageView;
+
+import androidx.annotation.NonNull;
+
+import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -59,4 +69,6 @@ public class ImageTask extends AsyncTask<String,Void, Bitmap> {
     public interface CallBack{
         void getResults(Bitmap result,String url);
     }
+
+
 }

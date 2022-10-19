@@ -1,5 +1,6 @@
 package comp5216.sydney.edu.au.afinal;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
@@ -9,11 +10,19 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.app.Fragment;
+
+import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.youth.banner.Banner;
 
 import java.io.IOException;
@@ -82,12 +91,25 @@ public class EventActivity extends AppCompatActivity {
         location.setText(event.getLocation());
         likeNum.setText(event.getLikes()+"");
         //show avatar of blogger
-//        new ImageTask(new ImageTask.CallBack() {
-//            @Override
-//            public void getResults(Bitmap result, String url) {
-//                userAvatar.setImageBitmap(result);
-//            }
-//        }).execute(event.getImageUrl());
+//// Reference to an image file in Cloud Storage
+        StorageReference ref = FirebaseStorage.getInstance().getReference().child("pig.jpeg");
+        //System.out.println("look!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! "+ref.getDownloadUrl().toString());
+        ref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                System.out.println("look!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! "+uri);
+                Glide.with(getApplicationContext())
+                        .load(uri)
+                        .into(userAvatar);
+                // Got the download URL for 'users/me/profile.png'
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Handle any errors
+            }
+        });
+
     }
 
     private void loadAvatar(){

@@ -134,6 +134,7 @@ public class AddActivity extends AppCompatActivity {
                 image = BitmapFactory.decodeFile(picturePath);
                 photoPath.add(picturePath);
                 imageList.add(image);
+
             }
 
         }

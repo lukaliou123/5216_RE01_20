@@ -90,8 +90,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         latLngArrayList = new ArrayList<>();
         locationNameArraylist = new ArrayList<>();
         eventsList = new ArrayList<>();
-        initFirestore();
-        getListItems();
+
         super.onCreate(savedInstanceState);
 
 
@@ -104,7 +103,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-
+        initFirestore();
+        getListItems();
         //System.out.println("arr size is:!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!: "+ mArrayList.size());
 
         // initializing our array lists.
@@ -133,7 +133,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
      * installed Google Play services and returned to the app.
      */
     @Override
-    public void onMapReady(GoogleMap googleMap) {
+    public void onMapReady(@NonNull GoogleMap googleMap) {
         mMap = googleMap;
 
         // Prompt the user for permission.
@@ -141,6 +141,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         // Turn on the My Location layer and the related control on the map.
         updateLocationUI();
+
+
 
         // Get the current location of the device and set the position of the map.
         //getDeviceLocation();
@@ -206,6 +208,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
      */
     private void updateLocationUI() {
         if (mMap == null) {
+            System.out.println("map null!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
             return;
         }
         try {
