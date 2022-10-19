@@ -11,6 +11,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -42,7 +43,12 @@ public class LoginActivity extends AppCompatActivity {
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if(currentUser != null){
             Intent intent = new Intent(LoginActivity.this, NavigatorBase.class);
-            startActivity(intent);
+            Firebase.getInstance().setLocalUser(Firebase.getInstance().getCurrentUser().getUid()).addOnSuccessListener(new OnSuccessListener() {
+                @Override
+                public void onSuccess(Object o) {
+                    startActivity(intent);
+                }
+            });
         }
     }
 
@@ -62,9 +68,9 @@ public class LoginActivity extends AppCompatActivity {
                             Log.d(TAG, "signInWithEmail:success");
                             Intent intent = new Intent(LoginActivity.this, NavigatorBase.class);
                             Log.d(TAG, Firebase.getInstance().getCurrentUser().getUid());
-                            Firebase.getInstance().setLocalUser(Firebase.getInstance().getCurrentUser().getUid()).addOnCompleteListener(new OnCompleteListener() {
+                            Firebase.getInstance().setLocalUser(Firebase.getInstance().getCurrentUser().getUid()).addOnSuccessListener(new OnSuccessListener() {
                                 @Override
-                                public void onComplete(@NonNull Task task) {
+                                public void onSuccess(Object o) {
                                     startActivity(intent);
                                 }
                             });

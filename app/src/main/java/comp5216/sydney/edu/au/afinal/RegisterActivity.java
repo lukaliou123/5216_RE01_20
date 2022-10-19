@@ -18,6 +18,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -26,6 +27,9 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+
+import java.net.URI;
+import java.net.URISyntaxException;
 
 import comp5216.sydney.edu.au.afinal.database.Firebase;
 
@@ -48,7 +52,6 @@ public class RegisterActivity extends AppCompatActivity {
         name=findViewById(R.id.name);
         profile=findViewById(R.id.img_profile);
         mAuth = FirebaseAuth.getInstance();
-
         profile.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
@@ -129,45 +132,6 @@ public class RegisterActivity extends AppCompatActivity {
                         }
                     }
                 });
-
-//        FirebaseAuth.getInstance().createUserWithEmailAndPassword(id.getText().toString(),password.getText().toString()).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-//            @Override
-//            public void onComplete(@NonNull Task<AuthResult> task) {
-//                if(task.isSuccessful()){
-//                    String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-//                    StorageReference storageReference = FirebaseStorage.getInstance().getReference().child("user").child(uid);
-//
-//                    storageReference.putFile(imageUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
-//                        @Override
-//                        public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
-//                            if(task.isSuccessful()){
-//
-//                                storageReference.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
-//                                    @Override
-//                                    public void onComplete(@NonNull Task<Uri> task) {
-//
-//                                        String imageurl = task.toString();
-//
-//                                        UserModel userModel=new UserModel();
-//                                        userModel.name=name.getText().toString();
-//                                        userModel.uid=uid;
-//                                        userModel.imageurl=imageurl;
-//
-//                                    }
-//                                });
-//                            }else{
-//
-//                                Toast.makeText(RegisterActivity.this,"error",Toast.LENGTH_SHORT).show();
-//                            }
-//                        }
-//                    });
-//
-//                }else{
-//
-//                    Toast.makeText(RegisterActivity.this,"error",Toast.LENGTH_SHORT).show();
-//                }
-//            }
-//        });
     }
 
 

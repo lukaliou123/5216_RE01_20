@@ -74,10 +74,11 @@ public class Firebase {
 
     public Task setLocalUser(String uid){
         return mFirestore.collection("Accounts")
-                .whereEqualTo("AccountId", uid)
+                .whereEqualTo("AccountID", uid)
                 .get()
                 .addOnCompleteListener(task1 -> {
                     if(task1.isSuccessful()) {
+                        Log.d("Firebase", String.valueOf(task1.getResult().size())+"!!!!!!!!!");
                         for (QueryDocumentSnapshot document : task1.getResult()) {
                             String uid1 = (String) document.getData().get("AccountID");
                             String username = (String) document.getData().get("Username");
@@ -87,7 +88,7 @@ public class Firebase {
                             String birth = (String) document.getData().get("Birth");
                             localUser = new Account(uid1, username, icon, gender, email, birth);
                         }
-                        Log.d("Firebase", "Finish");
+                        Log.d("Firebase", "Finish!!!!!!!!!");
                     } else {
                         Log.d("Firebase", "Error getting documents: ", task1.getException());
                     }
@@ -127,7 +128,7 @@ public class Firebase {
         account.put("Email", email);
         account.put("Icon", icon);
         account.put("Birth", "");
-        account.put("Gender", "");
+        account.put("Gender", "Secret");
         return accounts.add(account).addOnSuccessListener(documentReference -> Log.d("Firestore", "DocumentSnapshot added with ID: " + documentReference.getId())).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
