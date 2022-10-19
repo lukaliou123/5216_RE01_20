@@ -99,6 +99,11 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
                     Toast.LENGTH_SHORT).show();
             return;
         }
+        else if(password.length()<6){
+            Toast.makeText(EditProfileActivity.this, "Passwords should be longer than 6",
+                    Toast.LENGTH_SHORT).show();
+            return;
+        }
         else if(!password.equals(vpw)){
             Toast.makeText(EditProfileActivity.this, "Passwords are not same",
                     Toast.LENGTH_SHORT).show();

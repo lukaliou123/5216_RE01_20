@@ -85,6 +85,10 @@ public class RegisterActivity extends AppCompatActivity {
             Toast.makeText(RegisterActivity.this, "name or email is empty",
                     Toast.LENGTH_SHORT).show();
             return;
+        }else if(code.length()<6){
+            Toast.makeText(RegisterActivity.this, "Passwords should be longer than 6",
+                    Toast.LENGTH_SHORT).show();
+            return;
         }
         else if(!code.equals(vCode)){
             Toast.makeText(RegisterActivity.this, "Passwords are not same",
