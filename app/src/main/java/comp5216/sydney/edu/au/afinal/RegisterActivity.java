@@ -80,7 +80,7 @@ public class RegisterActivity extends AppCompatActivity {
         String username = name.getText().toString();
         String code = password.getText().toString();
         String vCode = vPassword.getText().toString();
-        if (email.equals("")||username.equals("")){
+        if (email.equals("")||username.equals("")||code.equals("")){
             Toast.makeText(RegisterActivity.this, "name or email is empty",
                     Toast.LENGTH_SHORT).show();
             return;

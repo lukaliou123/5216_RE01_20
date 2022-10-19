@@ -17,6 +17,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -74,20 +75,18 @@ public class Firebase {
 
     public Task setLocalUser(String uid){
         return mFirestore.collection("Accounts")
-                .whereEqualTo("AccountID", uid)
+                .document(uid)
                 .get()
                 .addOnCompleteListener(task1 -> {
                     if(task1.isSuccessful()) {
-                        Log.d("Firebase", String.valueOf(task1.getResult().size())+"!!!!!!!!!");
-                        for (QueryDocumentSnapshot document : task1.getResult()) {
-                            String uid1 = (String) document.getData().get("AccountID");
-                            String username = (String) document.getData().get("Username");
-                            String icon = (String) document.getData().get("Icon");
-                            String email = (String) document.getData().get("Email");
-                            String gender = (String) document.getData().get("Gender");
-                            String birth = (String) document.getData().get("Birth");
-                            localUser = new Account(uid1, username, icon, gender, email, birth);
-                        }
+                        DocumentSnapshot document = task1.getResult();
+                        String uid1 = (String) document.getData().get("AccountID");
+                        String username = (String) document.getData().get("Username");
+                        String icon = (String) document.getData().get("Icon");
+                        String email = (String) document.getData().get("Email");
+                        String gender = (String) document.getData().get("Gender");
+                        String birth = (String) document.getData().get("Birth");
+                        localUser = new Account(uid1, username, icon, gender, email, birth);
                         Log.d("Firebase", "Finish!!!!!!!!!");
                     } else {
                         Log.d("Firebase", "Error getting documents: ", task1.getException());
@@ -120,6 +119,16 @@ public class Firebase {
         return uriTask;
     }
 
+    public Task updateAccountSnapshotInFireStore(String id, String name, String icon, String gender, String birth){
+        DocumentReference accountRef = mFirestore.collection("Accounts").document(id);
+        Map<String, Object> account = new HashMap<>();
+        account.put("Username", name);
+        account.put("Icon", icon);
+        account.put("Birth", birth);
+        account.put("Gender", gender);
+        return accountRef.update(account);
+    }
+
     public Task createAccountSnapshotInFireStore(String id, String username, String icon, String email){
         CollectionReference accounts = mFirestore.collection("Accounts");
         Map<String, String> account = new HashMap<>();
@@ -127,9 +136,9 @@ public class Firebase {
         account.put("Username", username);
         account.put("Email", email);
         account.put("Icon", icon);
-        account.put("Birth", "");
+        account.put("Birth", "1/1/2000");
         account.put("Gender", "Secret");
-        return accounts.add(account).addOnSuccessListener(documentReference -> Log.d("Firestore", "DocumentSnapshot added with ID: " + documentReference.getId())).addOnFailureListener(new OnFailureListener() {
+        return accounts.document(id).set(account).addOnSuccessListener(documentReference -> Log.d("Firestore", "DocumentSnapshot added with ID: " + id)).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
                 Log.w("Firestore", "Error adding document", e);
