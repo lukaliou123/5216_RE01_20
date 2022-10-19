@@ -31,6 +31,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import comp5216.sydney.edu.au.afinal.entity.Account;
 import comp5216.sydney.edu.au.afinal.entity.EventEntity;
 import comp5216.sydney.edu.au.afinal.util.Adapter;
 
@@ -39,6 +40,7 @@ public class Firebase {
     private FirebaseStorage storage;
     private StorageReference storageRef;
     private FirebaseAuth mAuth;
+    private Account localUser;
     private static Firebase mFirebase;
 
     private Firebase(){
@@ -46,6 +48,7 @@ public class Firebase {
         storage = FirebaseStorage.getInstance();
         storageRef = storage.getReference();
         mAuth=FirebaseAuth.getInstance();
+        localUser = null;
     }
 
     public static void init() {
@@ -63,6 +66,32 @@ public class Firebase {
 
     public FirebaseUser getCurrentUser(){
         return mAuth.getCurrentUser();
+    }
+
+    public Account getLocalUser(){
+        return localUser;
+    }
+
+    public Task setLocalUser(String uid){
+        return mFirestore.collection("Accounts")
+                .whereEqualTo("AccountId", uid)
+                .get()
+                .addOnCompleteListener(task1 -> {
+                    if(task1.isSuccessful()) {
+                        for (QueryDocumentSnapshot document : task1.getResult()) {
+                            String uid1 = (String) document.getData().get("AccountID");
+                            String username = (String) document.getData().get("Username");
+                            String icon = (String) document.getData().get("Icon");
+                            String email = (String) document.getData().get("Email");
+                            String gender = (String) document.getData().get("Gender");
+                            String birth = (String) document.getData().get("Birth");
+                            localUser = new Account(uid1, username, icon, gender, email, birth);
+                        }
+                        Log.d("Firebase", "Finish");
+                    } else {
+                        Log.d("Firebase", "Error getting documents: ", task1.getException());
+                    }
+                });
     }
 
     public Task<Uri> uploadPhotoToStorage(String uid, Uri uri){
@@ -90,7 +119,7 @@ public class Firebase {
         return uriTask;
     }
 
-    public void createAccountSnapshotInFireStore(String id, String username, String icon, String email){
+    public Task createAccountSnapshotInFireStore(String id, String username, String icon, String email){
         CollectionReference accounts = mFirestore.collection("Accounts");
         Map<String, String> account = new HashMap<>();
         account.put("AccountID", id);
@@ -99,12 +128,7 @@ public class Firebase {
         account.put("Icon", icon);
         account.put("Birth", "");
         account.put("Gender", "");
-        accounts.add(account).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-            @Override
-            public void onSuccess(DocumentReference documentReference) {
-                Log.d("Firestore", "DocumentSnapshot added with ID: " + documentReference.getId());
-            }
-        }).addOnFailureListener(new OnFailureListener() {
+        return accounts.add(account).addOnSuccessListener(documentReference -> Log.d("Firestore", "DocumentSnapshot added with ID: " + documentReference.getId())).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
                 Log.w("Firestore", "Error adding document", e);

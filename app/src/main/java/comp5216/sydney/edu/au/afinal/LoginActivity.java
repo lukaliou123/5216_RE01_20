@@ -62,7 +62,12 @@ public class LoginActivity extends AppCompatActivity {
                             Log.d(TAG, "signInWithEmail:success");
                             Intent intent = new Intent(LoginActivity.this, NavigatorBase.class);
                             Log.d(TAG, Firebase.getInstance().getCurrentUser().getUid());
-                            startActivity(intent);
+                            Firebase.getInstance().setLocalUser(Firebase.getInstance().getCurrentUser().getUid()).addOnCompleteListener(new OnCompleteListener() {
+                                @Override
+                                public void onComplete(@NonNull Task task) {
+                                    startActivity(intent);
+                                }
+                            });
                         } else {
                             Log.w(TAG, "signInWithEmail:failure", task.getException());
                             Toast.makeText(LoginActivity.this, "Incorrect email or password",

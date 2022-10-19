@@ -102,16 +102,26 @@ public class RegisterActivity extends AppCompatActivity {
                                     @Override
                                     public void onComplete(@NonNull Task<Uri> task) {
                                         if (task.isSuccessful()) {
-                                            Firebase.getInstance().createAccountSnapshotInFireStore(uid, username, task.getResult().toString(),email);
+                                            Firebase.getInstance().createAccountSnapshotInFireStore(uid, username, task.getResult().toString(),email).addOnCompleteListener(new OnCompleteListener() {
+                                                @Override
+                                                public void onComplete(@NonNull Task task) {
+                                                    finish();
+                                                }
+                                            });
                                         }else{
                                             Log.d("Firebase", "task failed");
                                         }
                                     }
                                 });
                             }else{
-                                Firebase.getInstance().createAccountSnapshotInFireStore(uid, username, "",email);
+                                Firebase.getInstance().createAccountSnapshotInFireStore(uid, username, "",email).addOnCompleteListener(new OnCompleteListener() {
+                                    @Override
+                                    public void onComplete(@NonNull Task task) {
+                                        finish();
+                                    }
+                                });
                             }
-                            finish();
+
                         } else {
                             Log.w(TAG, "createUserWithEmail:failure", task.getException());
                             Toast.makeText(RegisterActivity.this, "Authentication failed.",
