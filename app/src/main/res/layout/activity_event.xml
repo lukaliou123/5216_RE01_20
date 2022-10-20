@@ -56,7 +56,7 @@
             />
 
         <LinearLayout
-            android:layout_width="200dp"
+            android:layout_width="250dp"
             android:layout_height="60dp"
             android:layout_toEndOf="@+id/event_head_portrait"
             android:layout_marginLeft="10dp"
@@ -83,18 +83,6 @@
         </LinearLayout>
 
 
-        <Button
-            android:id="@+id/event_btn_follow"
-            android:layout_width="100dp"
-            android:layout_height="40dp"
-            android:text="Follow"
-            android:textAllCaps="false"
-            android:background="@drawable/button_radios_shape"
-            android:layout_marginRight="10dp"
-            android:layout_centerVertical="true"
-            android:layout_alignParentRight="true"
-            />
-
     </RelativeLayout>
 
     <com.youth.banner.Banner
@@ -111,7 +99,7 @@
 
         <TextView
             android:id="@+id/event_title"
-            android:layout_width="150dp"
+            android:layout_width="match_parent"
             android:layout_height="30dp"
             android:hint="Title"
             android:background="@color/yellow"
@@ -128,24 +116,23 @@
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_margin="30dp"
+            android:layout_marginTop="48dp"
+            android:width="1dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.491"
+            app:layout_constraintHorizontal_bias="0.494"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.148" >
+            app:layout_constraintTop_toBottomOf="@+id/event_title">
 
             <EditText
                 android:id="@+id/event_content"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:ems="10"
                 android:background="@color/yellow"
+                android:ems="10"
                 android:gravity="start|top"
-                android:inputType="textMultiLine"
                 android:hint="Description"
-                />
+                android:inputType="textMultiLine" />
         </ScrollView>
 
         <ImageView
