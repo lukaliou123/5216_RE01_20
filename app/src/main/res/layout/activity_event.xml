@@ -83,18 +83,6 @@
         </LinearLayout>
 
 
-        <Button
-            android:id="@+id/event_btn_follow"
-            android:layout_width="100dp"
-            android:layout_height="40dp"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="10dp"
-            android:background="@drawable/button_radios_shape"
-            android:onClick="onFollowClick"
-            android:text="Follow"
-            android:textAllCaps="false" />
-
     </RelativeLayout>
 
     <com.youth.banner.Banner
@@ -201,66 +189,5 @@
 
 
     <!-- tags -->
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="30dp"
-            android:text="Tags"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.044"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.12" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="25dp"
-            android:background="@drawable/text_corner"
-            android:textAlignment="center"
-            android:text="design"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.045"
-            app:layout_constraintStart_toStartOf="parent"
-            android:textColor="@color/black"
-            app:layout_constraintTop_toTopOf="parent"
-            android:gravity="center|center_vertical"
-            app:layout_constraintVertical_bias="0.496" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="25dp"
-            android:background="@drawable/text_corner"
-            android:text="explore"
-            android:textAlignment="center"
-            android:textColor="@color/black"
-            android:gravity="center|center_vertical"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.239"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.496" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="25dp"
-            android:background="@drawable/text_corner"
-            android:gravity="center|center_vertical"
-            android:text="user interface"
-            android:textAlignment="center"
-            android:textColor="@color/black"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.498"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </LinearLayout>
