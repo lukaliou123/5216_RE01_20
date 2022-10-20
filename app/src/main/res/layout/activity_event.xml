@@ -104,6 +104,7 @@
         app:banner_radius="20dp"/>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/textbox"
         android:layout_width="match_parent"
         android:layout_height="240dp"
         android:layout_marginTop="10dp"
@@ -113,8 +114,8 @@
             android:id="@+id/event_title"
             android:layout_width="match_parent"
             android:layout_height="30dp"
-            android:hint="Title"
             android:background="@color/yellow"
+            android:hint="Title"
             android:textAlignment="center"
             android:textColor="@color/black"
             android:textSize="20sp"

@@ -22,6 +22,8 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
@@ -83,6 +85,34 @@ public class AddActivity extends AppCompatActivity {
         confirm = findViewById(R.id.add_tit_confirm);
         selectImageBtn = findViewById(R.id.add_btn);
         title = findViewById(R.id.add_title);
+        title.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                int lines = title.getLineCount();
+                if (lines > 1) {
+                    String string = s.toString();
+                    int cursorStart = title.getSelectionStart();
+                    int cursorEnd = title.getSelectionEnd();
+                    if (cursorStart == cursorEnd && cursorStart < string.length() && cursorStart >= 1) {
+                        string = string.substring(0, cursorStart - 1) + string.substring(cursorStart);
+                    } else {
+                        string = string.substring(0, s.length() - 1);
+                    }
+                    title.setText(string);
+                    title.setSelection(title.getText().length());
+                }
+            }
+        });
         content = findViewById(R.id.add_content);
         location = findViewById(R.id.add_text_location);
         l = getLastKnownLocation();
