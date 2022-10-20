@@ -21,7 +21,7 @@ public class EventEntity implements Serializable {
 
     public EventEntity(String blogger, String blog_ref, String description, Timestamp timeStamp,
                        GeoPoint geo, List<String> imageUrl, Integer likes, String location, String title) {
-        Blogger = blogger;
+        this.Blogger = blogger;
         this.blog_ref = blog_ref;
         this.description = description;
         this.timeStamp = timeStamp;

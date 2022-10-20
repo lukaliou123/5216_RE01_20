@@ -320,7 +320,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                 System.out.println("geo is !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!: "+document.getData().get("location"));
                                 Log.d(TAG, document.getId() + " => " + document.getData());
 
-                                String blogger = (String)document.getData().get("Blogger");
+                                String blogger = (String)document.getData().get("blogger");
                                 String blogger_ref = (String)document.getData().get("blog_ref");
                                 Timestamp timestamp = (Timestamp)document.getData().get("timeStamp");
                                 String description = (String)document.getData().get("description");
