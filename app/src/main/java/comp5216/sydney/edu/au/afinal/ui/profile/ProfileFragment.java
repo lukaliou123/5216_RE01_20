@@ -47,7 +47,7 @@ public class ProfileFragment extends Fragment {
         user = Firebase.getInstance().getLocalUser();
         isFirst = true;
 
-        name.setText(user.getName());
+        name.setText(user.getUsername());
         email.setText(user.getEmail());
         if(!user.getIcon().equals(""))
             Glide.with(this)
@@ -73,7 +73,7 @@ public class ProfileFragment extends Fragment {
         super.onResume();
         if(!isFirst){
             user = Firebase.getInstance().getLocalUser();
-            name.setText(user.getName());
+            name.setText(user.getUsername());
             email.setText(user.getEmail());
             if(!user.getIcon().equals(""))
                 Glide.with(this)
