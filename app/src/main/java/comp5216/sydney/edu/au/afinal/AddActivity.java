@@ -54,12 +54,13 @@ public class AddActivity extends AppCompatActivity {
     private EditText content;
     private TextView location;
     private Bitmap image;
-
     private List<String> photoPath = new ArrayList<>();
     private List<Bitmap> imageList = new ArrayList<>();
     private Banner<Bitmap, MyBannerAdapter> banner;
     private MyBannerAdapter bannerAdapter;
 
+    private String address;
+    private Location l;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,10 +77,12 @@ public class AddActivity extends AppCompatActivity {
         cancel = findViewById(R.id.add_tit_cancel);
         confirm = findViewById(R.id.add_tit_confirm);
         selectImageBtn = findViewById(R.id.add_btn);
-        //imageView = findViewById(R.id.add_image);
         title = findViewById(R.id.add_title);
         content = findViewById(R.id.add_content);
         location = findViewById(R.id.add_text_location);
+        l = getLastKnownLocation();
+        address = getAddress(l.getLatitude(),l.getLongitude()).getLocality();
+        location.setText(address);
         cancel.setOnClickListener(view -> onBackPressed());
         confirm.setOnClickListener(view -> uploadData());
         selectImageBtn.setOnClickListener(view -> chooseImage());
@@ -100,11 +103,10 @@ public class AddActivity extends AppCompatActivity {
         String titleVal = title.getText().toString();
         String description = content.getText().toString();
         List<String> urls = NetUtil.uploadMediaFiles(photoPath, AddActivity.this);
-        Location l = getLastKnownLocation();
         GeoPoint geo = new GeoPoint(l.getLatitude(),l.getLongitude());
         EventEntity event = new EventEntity("test","???",description,new Timestamp(new Date()),geo,
-                urls,0,getAddress(l.getLatitude(),l.getLongitude()).toString(),titleVal);
-        NetUtil.uploadEvent(event);
+                urls,0,address,titleVal);
+        NetUtil.uploadEvent(event, AddActivity.this);
     }
 
     private void chooseImage(){

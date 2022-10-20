@@ -1,11 +1,13 @@
 package comp5216.sydney.edu.au.afinal.util;
 
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.net.Uri;
 import android.util.Log;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -22,6 +24,7 @@ import com.google.firebase.storage.UploadTask;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 
 import comp5216.sydney.edu.au.afinal.entity.EventEntity;
@@ -78,29 +81,22 @@ public class NetUtil {
 
     public static List<String> uploadMediaFiles(List<String> filePaths, Context context){
         if(filePaths != null && filePaths.size() != 0){
+
             final ProgressDialog progressDialog = new ProgressDialog(context);
             progressDialog.setTitle("Uploading to firebase...");
             progressDialog.show();
-            List<String> resUrlList = new ArrayList<>(filePaths.size());
+            List<String> imageName = new ArrayList<>(filePaths.size());
             StorageReference storageReference =  FirebaseStorage.getInstance().getReference();
             for(int i = 0; i < filePaths.size(); i ++){
-                StorageReference ref = storageReference.child("images/" + new File(filePaths.get(i)).getName());
-                File file = new File(filePaths.get(i));
-
+                String uuid = UUID.randomUUID().toString();
+                StorageReference ref = storageReference.child("images/" + uuid + ".jpg");
+                imageName.add("images/" + uuid + ".jpg");
                 int finalI = i;
                 ref.putFile(Uri.fromFile(new File(filePaths.get(i)))).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                         progressDialog.setMessage("uploaded: " + finalI + "/" + filePaths.size());
-                        ref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                            @Override
-                            public void onSuccess(Uri uri) {
-                                //get the url of the file we have uploaded
-                                Log.e("uri",uri.getPath());
-                                resUrlList.add(uri.getPath());
 
-                            }
-                        });
                     }
                 }) .addOnFailureListener(new OnFailureListener() {
                             @Override
@@ -112,15 +108,33 @@ public class NetUtil {
 
             }
             progressDialog.dismiss();
-            return resUrlList;
+            return imageName;
         }
         return null;
     }
 
-    public static void uploadEvent(EventEntity event){
+    public static void uploadEvent(EventEntity event, Context context){
         FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
         CollectionReference ref = firebaseFirestore.collection("Events");
-        ref.add(event);
+        ref.add(event).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+            @Override
+            public void onSuccess(DocumentReference documentReference) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                builder.setTitle("Tips")
+                        .setMessage("Uploaded!")
+                        .setPositiveButton("ok", (dialogInterface, i) -> {});
+                builder.create().show();
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                builder.setTitle("Tips")
+                        .setMessage("Upload failed!")
+                        .setPositiveButton("ok", (dialogInterface, i) -> {});
+                builder.create().show();
+            }
+        });
     }
 
     public static void setEvent(EventEntity event, String documentID){
@@ -128,6 +142,8 @@ public class NetUtil {
         DocumentReference ref = firebaseFirestore.collection("Events").document(documentID);
         ref.set(event);
     }
+
+
 
 
 
