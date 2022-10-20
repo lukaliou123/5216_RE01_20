@@ -112,12 +112,19 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
         Firebase.getInstance().updateAccountSnapshotInFireStore(user.getUid(), name, uri, sex, birthday).addOnCompleteListener(new OnCompleteListener() {
             @Override
             public void onComplete(@NonNull Task task) {
-                Firebase.getInstance().setLocalUser(user.getUid()).addOnSuccessListener(new OnSuccessListener() {
-                    @Override
-                    public void onSuccess(Object o) {
-                        finish();
-                    }
-                });
+                if(task.isSuccessful())
+                    Firebase.getInstance().updateEventName(user.getUid(),name).addOnCompleteListener(new OnCompleteListener() {
+                        @Override
+                        public void onComplete(@NonNull Task task) {
+                            if(task.isSuccessful())
+                                Firebase.getInstance().setLocalUser(user.getUid()).addOnSuccessListener(new OnSuccessListener() {
+                                    @Override
+                                    public void onSuccess(Object o) {
+                                        finish();
+                                    }
+                                });
+                        }
+                    });
             }
         });
     }

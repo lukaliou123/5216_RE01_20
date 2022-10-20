@@ -39,7 +39,6 @@ public class Firebase {
     private FirebaseAuth mAuth;
     private Account localUser;
     private static Firebase mFirebase;
-    private Account followUser;
 
     private Firebase(){
         mFirestore = FirebaseFirestore.getInstance();
@@ -95,30 +94,13 @@ public class Firebase {
                 });
     }
 
-    public Account getFollowUserUser(){
-        return followUser;
-    }
-
-    public Task setFollowUser(String uid){
+    public Task getUser(String uid){
         return mFirestore.collection("Accounts")
                 .document(uid)
-                .get()
-                .addOnCompleteListener(task1 -> {
-                    if(task1.isSuccessful()) {
-                        DocumentSnapshot document = task1.getResult();
-                        String uid1 = (String) document.getData().get("AccountID");
-                        String username = (String) document.getData().get("Username");
-                        String icon = (String) document.getData().get("Icon");
-                        String email = (String) document.getData().get("Email");
-                        String gender = (String) document.getData().get("Gender");
-                        String birth = (String) document.getData().get("Birth");
-                        followUser = new Account(uid1, username, icon, gender, email, birth);
-                        Log.d("Firebase", "Finish!!!!!!!!!");
-                    } else {
-                        Log.d("Firebase", "Error getting documents: ", task1.getException());
-                    }
-                });
+                .get();
     }
+
+
 
     public Task<Uri> uploadPhotoToStorage(String uid, Uri uri){
         if (uri == null){
@@ -212,5 +194,23 @@ public class Firebase {
                     }
                 }
         );
+    }
+
+    public Task updateEventName(String uid, String name) {
+        return mFirestore.collection("Events").whereEqualTo("blog_ref", uid)
+                .get()
+                .addOnCompleteListener(
+                        new OnCompleteListener<QuerySnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                if (task.isSuccessful()) {
+                                    for (QueryDocumentSnapshot doc : task.getResult()) {
+                                        String docID = doc.getId();
+                                        mFirestore.collection("Events").document(docID).update("blogger", name);
+                                    }
+                                }
+                            }
+                        }
+                );
     }
 }

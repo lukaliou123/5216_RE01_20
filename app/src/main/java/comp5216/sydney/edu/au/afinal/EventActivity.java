@@ -14,8 +14,11 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.youth.banner.Banner;
@@ -47,7 +50,6 @@ public class EventActivity extends AppCompatActivity {
 
     private List<Bitmap> imageList;
     private EventEntity eventEntity;
-    private Account followUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,8 +62,9 @@ public class EventActivity extends AppCompatActivity {
 
         eventEntity = events.get();//(EventEntity)getIntent().getSerializableExtra("event");
         initView();
-        show(eventEntity);
         loadImage();
+        show(eventEntity);
+
     }
 
 
@@ -78,7 +81,7 @@ public class EventActivity extends AppCompatActivity {
         banner = findViewById(R.id.event_banner);
     }
 
-    private void show(EventEntity event){
+    private void show(EventEntity event) {
         username.setText(event.getBlogger());
         date.setText(event.getTimeStamp().toDate().toString());
         title.setText(event.getTitle());
@@ -88,13 +91,31 @@ public class EventActivity extends AppCompatActivity {
         //show avatar of blogger
         String userId = eventEntity.getBlog_ref();
         Firebase FB = Firebase.getInstance();
-        FB.setFollowUser(userId);
-        followUser = FB.getFollowUserUser();
-        String followIcon = followUser.getIcon();
-        Glide.with(getApplicationContext())
-                .load(followIcon)
-                .into(userAvatar);
+        FB.getUser(userId).addOnCompleteListener(new OnCompleteListener() {
+            @Override
+            public void onComplete(@NonNull Task task) {
+                if(task.isSuccessful()){
+                    Account followUser = setAccount(task);
+                    String followIcon = followUser.getIcon();
+                    Glide.with(getApplicationContext())
+                            .load(followIcon)
+                            .into(userAvatar);
+                }
 
+            }
+        });
+    }
+
+    private Account setAccount(Task task){
+        DocumentSnapshot document = (DocumentSnapshot) task.getResult();
+        String uid1 = (String) document.getData().get("AccountID");
+        String username = (String) document.getData().get("Username");
+        String icon = (String) document.getData().get("Icon");
+        String email = (String) document.getData().get("Email");
+        String gender = (String) document.getData().get("Gender");
+        String birth = (String) document.getData().get("Birth");
+        assert uid1 != null;
+        return new Account(uid1, username, icon, gender, email, birth);
     }
 
     private void loadAvatar(){
