@@ -21,9 +21,13 @@ import androidx.lifecycle.ViewModelProvider;
 
 import java.util.ArrayList;
 
+import comp5216.sydney.edu.au.afinal.EventActivity;
+import comp5216.sydney.edu.au.afinal.MapsActivity;
+import comp5216.sydney.edu.au.afinal.NavigatorBase;
 import comp5216.sydney.edu.au.afinal.database.Firebase;
 import comp5216.sydney.edu.au.afinal.databinding.FragmentSearchBinding;
 import comp5216.sydney.edu.au.afinal.entity.EventEntity;
+import comp5216.sydney.edu.au.afinal.entity.Events;
 import comp5216.sydney.edu.au.afinal.util.Adapter;
 
 public class SearchFragment extends Fragment {
@@ -79,7 +83,12 @@ public class SearchFragment extends Fragment {
 
     private void listViewListener(){
         listView.setOnItemClickListener((adapterView, view, i, l) -> {
-
+            EventEntity event = events.get(i);
+            Events tempEvents = Events.getSingleton();
+            tempEvents.add(event);
+            Intent intent = new Intent(this.getContext(), EventActivity.class);
+            intent.putExtra("event",event);
+            startActivity(intent);
         });
     }
 
