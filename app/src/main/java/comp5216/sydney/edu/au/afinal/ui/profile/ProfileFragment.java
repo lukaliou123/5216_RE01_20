@@ -105,6 +105,7 @@ public class ProfileFragment extends Fragment {
                 Glide.with(this)
                         .load(user.getIcon())
                         .into(image);
+            Firebase.getInstance().getUserEvent(events, eventsAdapter, user.getAccountID());
 
         }isFirst = false;
     }
