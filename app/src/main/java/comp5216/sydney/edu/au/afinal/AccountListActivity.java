@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageButton;
 import android.widget.ListView;
 
 import androidx.annotation.RequiresApi;
@@ -16,6 +17,7 @@ import java.util.ArrayList;
 public class AccountListActivity extends AppCompatActivity {
 
     ListView listView;
+    private ImageButton goBack;
     ArrayList<String> accountNames;
     ArrayList<String> accountIDs;
 
@@ -27,6 +29,10 @@ public class AccountListActivity extends AppCompatActivity {
         Intent intent = getIntent();
         accountIDs = intent.getStringArrayListExtra("AccountIDs");
         accountNames = intent.getStringArrayListExtra("AccountNames");
+
+        // goback
+        goBack = findViewById(R.id.list_back);
+        goBack.setOnClickListener(view -> onBackPressed());
 
         listView = (ListView) findViewById(R.id.listView);
         final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, android.R.id.text1, (String[]) accountNames.toArray(new String[accountNames.size()]));
