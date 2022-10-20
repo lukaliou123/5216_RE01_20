@@ -73,8 +73,6 @@ public class EventActivity extends AppCompatActivity {
         userAvatar = findViewById(R.id.event_head_portrait);
         username = findViewById(R.id.event_text_username);
         date = findViewById(R.id.event_text_date);
-        toFollow = findViewById(R.id.event_btn_follow);
-        toFollow.setOnClickListener(view -> {});
         title = findViewById(R.id.event_title);
         description = findViewById(R.id.event_content);
         location = findViewById(R.id.event_text_location);
