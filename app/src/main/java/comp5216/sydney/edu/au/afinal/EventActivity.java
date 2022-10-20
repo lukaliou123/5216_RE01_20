@@ -85,7 +85,7 @@ public class EventActivity extends AppCompatActivity {
 
     private void show(EventEntity event){
         username.setText(event.getBlogger());
-        date.setText(event.getTimeStamp().toString());
+        date.setText(event.getTimeStamp().toDate().toString());
         title.setText(event.getTitle());
         description.setText(event.getDescription());
         location.setText(event.getLocation());
