@@ -278,10 +278,12 @@ public class HomePageActivity extends AppCompatActivity {
 
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == REQUEST_CODE_FOLLOWING) {
-            String newAccountID = data.getStringExtra("AccountID");
-            if (tobefollowAccountPath != newAccountID) {
-                tobefollowAccountPath = newAccountID;
-                refreshViewAccountUI();
+            if (data != null && data.hasExtra("AccountID")) {
+                String newAccountID = data.getStringExtra("AccountID");
+                if (tobefollowAccountPath != newAccountID) {
+                    tobefollowAccountPath = newAccountID;
+                    refreshViewAccountUI();
+                }
             }
         }
         else if(requestCode == REQUEST_CODE_EVENT)
