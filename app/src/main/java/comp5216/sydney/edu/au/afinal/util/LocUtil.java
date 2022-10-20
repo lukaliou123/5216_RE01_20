@@ -31,11 +31,12 @@ public class LocUtil extends AppCompatActivity {
     static String latitude, longitude;
 
 
-    private void getLocation() {
+    private Location getLocation() {
         if (ActivityCompat.checkSelfPermission(
                 LocUtil.this,Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
                 LocUtil.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION);
+            return null;
         } else {
             Location locationGPS = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
             if (locationGPS != null) {
@@ -44,8 +45,10 @@ public class LocUtil extends AppCompatActivity {
                 latitude = String.valueOf(lat);
                 longitude = String.valueOf(longi);
                 showLocation.setText("Your Location: " + "\n" + "Latitude: " + latitude + "\n" + "Longitude: " + longitude);
+                return locationGPS;
             } else {
                 Toast.makeText(this, "Unable to find location.", Toast.LENGTH_SHORT).show();
+                return null;
             }
         }
     }
