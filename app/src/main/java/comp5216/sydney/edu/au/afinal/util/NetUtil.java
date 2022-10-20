@@ -9,6 +9,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 
+import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -22,6 +23,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.StorageTask;
 import com.google.firebase.storage.UploadTask;
 import java.io.File;
 import java.util.ArrayList;
@@ -82,39 +84,35 @@ public class NetUtil {
         return  null;
     }
 
-    public static List<String> uploadMediaFiles(List<String> filePaths, Context context){
+    public static List<Task<Uri>> uploadMediaFiles(List<String> filePaths, Context context){
         if(filePaths != null && filePaths.size() != 0){
-
+            final List<Task<Uri>> res = new ArrayList<>();
             final ProgressDialog progressDialog = new ProgressDialog(context);
             progressDialog.setTitle("Uploading to firebase...");
             progressDialog.show();
             List<String> imageName = new ArrayList<>(filePaths.size());
             StorageReference storageReference =  FirebaseStorage.getInstance().getReference();
-            for(int i = 0; i < filePaths.size(); i ++){
+            for(int i = 0; i < filePaths.size(); i ++) {
                 String uuid = UUID.randomUUID().toString();
                 StorageReference ref = storageReference.child("images/" + uuid + ".jpg");
-                imageName.add("images/" + uuid + ".jpg");
+                UploadTask uploadTask = ref.putFile(Uri.fromFile(new File(filePaths.get(i))));
                 int finalI = i;
-                ref.putFile(Uri.fromFile(new File(filePaths.get(i)))).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                uploadTask.addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
                     @Override
-                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        progressDialog.setMessage("uploaded: " + finalI + "/" + filePaths.size());
-
+                    public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                        res.add(task.getResult().getStorage().getDownloadUrl());
+                        progressDialog.setMessage("uploaded" + finalI +"/"+ filePaths.size());
+                        if(finalI == filePaths.size() - 1){
+                            progressDialog.dismiss();
+                        }
                     }
-                }) .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                progressDialog.dismiss();
-                                Toast.makeText(context, "Failed "+e.getMessage(), Toast.LENGTH_SHORT).show();
-                            }
-                        });
-
+                });
             }
-            progressDialog.dismiss();
-            return imageName;
+            return res;
         }
         return null;
     }
+
 
     public static void uploadEvent(EventEntity event, Context context){
         FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();

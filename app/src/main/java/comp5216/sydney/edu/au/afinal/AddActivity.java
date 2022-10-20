@@ -27,6 +27,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.GeoPoint;
 import com.makeramen.roundedimageview.RoundedImageView;
@@ -100,14 +101,17 @@ public class AddActivity extends AppCompatActivity {
         banner.setDatas(imageList);
     }
 
-
     private void uploadData(){
         Account curUser = Firebase.getInstance().getLocalUser();
         String titleVal = title.getText().toString();
         String description = content.getText().toString();
-        List<String> urls = NetUtil.uploadMediaFiles(photoPath, AddActivity.this);
+        List<Task<Uri>> uris = NetUtil.uploadMediaFiles(photoPath, AddActivity.this);
+        List<String> urls = new ArrayList<>();
+        for(int i = 0; i < uris.size(); i ++){
+            urls.add(uris.get(i).toString());
+        }
         GeoPoint geo = new GeoPoint(l.getLatitude(),l.getLongitude());
-        EventEntity event = new EventEntity(curUser.getName(),curUser.getAccountID(),description,new Timestamp(new Date()),geo,
+        EventEntity event = new EventEntity(curUser.getUsername(),curUser.getAccountID(),description,new Timestamp(new Date()),geo,
                 urls,0,address,titleVal);
         NetUtil.uploadEvent(event, AddActivity.this);
     }
