@@ -64,7 +64,6 @@ public class ProfileFragment extends Fragment {
             Intent intent = new Intent();
             intent.setClass(getActivity(), EditProfileActivity.class);
             getActivity().startActivity(intent);
-            onResume();
         }
     }
 

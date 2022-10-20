@@ -10,11 +10,15 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Filter;
 import android.widget.Filterable;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import comp5216.sydney.edu.au.afinal.database.Firebase;
 import comp5216.sydney.edu.au.afinal.entity.EventEntity;
 import comp5216.sydney.edu.au.afinal.R;
 import comp5216.sydney.edu.au.afinal.ui.search.SearchFragment;
@@ -59,6 +63,7 @@ public class Adapter extends BaseAdapter implements Filterable {
             holder.time = view.findViewById(R.id.time);
             holder.address = view.findViewById(R.id.address);
             holder.like = view.findViewById(R.id.like);
+            holder.im = view.findViewById(R.id.eventimage);
             view.setTag(holder);
         }else{
             holder = (ViewHolder) view.getTag();
@@ -69,6 +74,17 @@ public class Adapter extends BaseAdapter implements Filterable {
         holder.time.setText(events.get(i).getTimeStamp().toDate().toString());
         holder.address.setText(events.get(i).getLocation());
         holder.like.setText(String.valueOf(events.get(i).getLikes())+"  ");
+        if(events.get(i).getImageUrl()!=null){
+            try{
+                Glide.with(mContext)
+                        .load(Firebase.getInstance().getPhotoStorageRef(events.get(0).getImageUrl().get(0)))
+                        .into(holder.im);
+            }catch(Exception e){
+                e.printStackTrace();
+
+            }
+        }
+
         return view;
     }
 
@@ -78,6 +94,7 @@ public class Adapter extends BaseAdapter implements Filterable {
         TextView time;
         TextView address;
         TextView like;
+        ImageView im;
     }
 
     @Override
