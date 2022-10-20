@@ -45,24 +45,25 @@
             android:id="@+id/event_head_portrait"
             android:layout_width="60dp"
             android:layout_height="60dp"
-            android:src="@color/light_white"
-            android:layout_marginLeft="10dp"
-            android:layout_centerVertical="true"
             android:layout_alignParentLeft="true"
-            app:riv_corner_radius_top_right="30dp"
-            app:riv_corner_radius_top_left="30dp"
-            app:riv_corner_radius_bottom_right="30dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:onClick="onAvatarClick"
+            android:src="@color/light_white"
             app:riv_corner_radius_bottom_left="30dp"
-            />
+            app:riv_corner_radius_bottom_right="30dp"
+            app:riv_corner_radius_top_left="30dp"
+            app:riv_corner_radius_top_right="30dp" />
 
         <LinearLayout
             android:layout_width="250dp"
             android:layout_height="60dp"
-            android:layout_toEndOf="@+id/event_head_portrait"
-            android:layout_marginLeft="10dp"
             android:layout_centerVertical="true"
-            android:orientation="vertical"
-            >
+            android:layout_marginLeft="10dp"
+            android:layout_toEndOf="@+id/event_head_portrait"
+            android:onClick="onAvatarClick"
+            android:orientation="vertical">
+
             <TextView
                 android:id="@+id/event_text_username"
                 android:layout_width="wrap_content"
@@ -78,10 +79,21 @@
                 android:layout_width="wrap_content"
                 android:layout_height="30dp"
                 android:text="date"
-                android:textAlignment="center"
-                />
+                android:textAlignment="center" />
         </LinearLayout>
 
+
+        <Button
+            android:id="@+id/event_btn_follow"
+            android:layout_width="100dp"
+            android:layout_height="40dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/button_radios_shape"
+            android:onClick="onFollowClick"
+            android:text="Follow"
+            android:textAllCaps="false" />
 
     </RelativeLayout>
 

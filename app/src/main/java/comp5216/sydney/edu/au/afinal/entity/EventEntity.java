@@ -1,12 +1,10 @@
 package comp5216.sydney.edu.au.afinal.entity;
 
-import android.location.Location;
-
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.GeoPoint;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.io.Serializable;
-import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -122,5 +120,20 @@ public class EventEntity implements Serializable {
     @Override
     public int hashCode() {
         return Objects.hash(Blogger, blog_ref, description, timeStamp, geo, imageUrl, likes, location, title);
+    }
+
+    public static EventEntity FromQueryDocument(QueryDocumentSnapshot document)
+    {
+        GeoPoint geo = (GeoPoint) document.getData().get("geo");
+        String title = (String) document.getData().get("title");
+        String blogRef = (String) document.getData().get("blog_ref");
+        String blogger = (String) document.getData().get("blogger");
+        Timestamp timestamp = (Timestamp) document.getData().get("timeStamp");
+        String description = (String) document.getData().get("description");
+        List<String> imageUrl = (List<String>) document.getData().get("imageUrl");
+        long likesInLong = (Long) document.getData().get("likes");
+        Integer likes = (int) likesInLong;
+        String address = (String) document.getData().get("location");
+        return new EventEntity(blogger,blogRef,description,timestamp,geo,imageUrl,likes,address,title);
     }
 }

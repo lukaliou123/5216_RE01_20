@@ -11,25 +11,33 @@ public class Account {
     @ColumnInfo(name = "AccountID")
     private String AccountID;
 
-    @ColumnInfo(name = "Name")
-    private String Name;
+    @ColumnInfo(name = "Username")
+    private String Username;
 
     @ColumnInfo(name = "icon")
     private String Icon;
 
+    @ColumnInfo(name = "Gender")
     private String Gender;
 
+    @ColumnInfo(name = "Email")
     private String Email;
 
-    private String BirthDate;
+    @ColumnInfo(name = "Birth")
+    private String Birth;
+
+    public Account()
+    {
+
+    }
 
     public Account(@NonNull String accountID, String name, String icon, String gender, String email, String birthDate) {
         AccountID = accountID;
-        Name = name;
+        Username = name;
         Icon = icon;
         Gender = gender;
         Email = email;
-        BirthDate = birthDate;
+        Birth = birthDate;
     }
 
     public String getGender() {
@@ -48,12 +56,12 @@ public class Account {
         Email = email;
     }
 
-    public String getBirthDate() {
-        return BirthDate;
+    public String getBirth() {
+        return Birth;
     }
 
-    public void setBirthDate(String birthDate) {
-        BirthDate = birthDate;
+    public void setBirth(String birth) {
+        Birth = birth;
     }
 
 
@@ -65,12 +73,12 @@ public class Account {
         AccountID = accountID;
     }
 
-    public String getName() {
-        return Name;
+    public String getUsername() {
+        return Username;
     }
 
-    public void setName(String name) {
-        Name = name;
+    public void setUsername(String username) {
+        Username = username;
     }
 
     public String getIcon() {

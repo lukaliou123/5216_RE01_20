@@ -17,7 +17,7 @@ public class AccountListActivity extends AppCompatActivity {
 
     ListView listView;
     ArrayList<String> accountNames;
-    ArrayList<Integer> accountIDs;
+    ArrayList<String> accountIDs;
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
@@ -25,7 +25,7 @@ public class AccountListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_account_list);
         Intent intent = getIntent();
-        accountIDs = intent.getIntegerArrayListExtra("AccountIDs");
+        accountIDs = intent.getStringArrayListExtra("AccountIDs");
         accountNames = intent.getStringArrayListExtra("AccountNames");
 
         listView = (ListView) findViewById(R.id.listView);
@@ -35,7 +35,7 @@ public class AccountListActivity extends AppCompatActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Integer accountID = accountIDs.get(position);
+                String accountID = accountIDs.get(position);
                 Intent outputIntent = new Intent();
                 outputIntent.putExtra("AccountID", accountID);
                 setResult(RESULT_OK, outputIntent);
