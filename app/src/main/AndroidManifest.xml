@@ -47,7 +47,11 @@
         </activity>
         <activity
             android:name=".HomePageActivity"
-            android:exported="false"/>
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
         <activity
             android:name=".LoginActivity"
             android:label="Login"

@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.location.Address;
 import android.location.Geocoder;
@@ -12,6 +13,7 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -34,7 +36,7 @@ import comp5216.sydney.edu.au.afinal.entity.Events;
 import comp5216.sydney.edu.au.afinal.util.ImageTask;
 
 public class EventActivity extends AppCompatActivity {
-
+    public static int REQUEST_CODE_EVENT = 502;
 
     private ImageButton goBack;
 
@@ -115,6 +117,13 @@ public class EventActivity extends AppCompatActivity {
     private void loadAvatar(){
 
 
+    }
+
+    public void onAvatarClick(View view) {
+        Intent intent = new Intent(EventActivity.this, HomePageActivity.class);
+        intent.putExtra("ViewAccountID", eventEntity.getBlog_ref());
+
+        startActivityForResult(intent, REQUEST_CODE_EVENT);
     }
 
     private void loadImage(){
