@@ -127,7 +127,7 @@ public class EventEntity implements Serializable {
         GeoPoint geo = (GeoPoint) document.getData().get("geo");
         String title = (String) document.getData().get("title");
         String blogRef = (String) document.getData().get("blog_ref");
-        String blogger = (String) document.getData().get("Blogger");
+        String blogger = (String) document.getData().get("blogger");
         Timestamp timestamp = (Timestamp) document.getData().get("timeStamp");
         String description = (String) document.getData().get("description");
         List<String> imageUrl = (List<String>) document.getData().get("imageUrl");
