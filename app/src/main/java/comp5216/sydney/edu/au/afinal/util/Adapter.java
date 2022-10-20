@@ -77,7 +77,7 @@ public class Adapter extends BaseAdapter implements Filterable {
         if(events.get(i).getImageUrl()!=null){
             try{
                 Glide.with(mContext)
-                        .load(Firebase.getInstance().getPhotoStorageRef(events.get(0).getImageUrl().get(0)))
+                        .load((events.get(i).getImageUrl().get(0)))
                         .into(holder.im);
             }catch(Exception e){
                 e.printStackTrace();

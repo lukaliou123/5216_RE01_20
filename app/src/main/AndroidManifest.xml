@@ -26,7 +26,16 @@
         tools:targetApi="32">
         <activity
             android:name=".LoginActivity"
-            android:exported="false"/>
+            android:label="Login"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
         <activity
             android:name=".RegisterActivity"
             android:label="Register"
@@ -54,15 +63,9 @@
         </activity>
         <activity
             android:name=".AddActivity"
-            android:label="Login"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
+            android:label="Add Event"
+            android:exported="false">
+
         </activity>
         <activity
             android:name=".AccountListActivity"
