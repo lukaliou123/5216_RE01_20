@@ -312,16 +312,9 @@ public class HomePageActivity extends AppCompatActivity {
 
             if(event.getImageUrl().size() > 0 && !event.getImageUrl().get(0).isEmpty()) {
                 try {
-                    StorageReference storageReference = FirebaseStorage.getInstance().getReference(event.getImageUrl().get(0));
+                    Uri imageUri = Uri.parse(event.getImageUrl().get(0));
                     ImageView iv = convertView.findViewById(R.id.eventImageView);
-                    storageReference.getDownloadUrl().addOnSuccessListener(
-                            new OnSuccessListener<Uri>() {
-                                @Override
-                                public void onSuccess(Uri uri) {
-                                    Picasso.get().load(uri).into(iv);
-                                }
-                            }
-                    );
+                    Picasso.get().load(imageUri).into(iv);
                 } catch (Exception e) {
                     Log.e("Firebase", "Can't get image from url:" + event.getImageUrl().get(0));
                 }
