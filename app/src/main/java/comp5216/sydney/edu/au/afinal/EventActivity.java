@@ -3,36 +3,33 @@ package comp5216.sydney.edu.au.afinal;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.app.Fragment;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.youth.banner.Banner;
+import com.youth.banner.adapter.BannerImageAdapter;
+import com.youth.banner.holder.BannerImageHolder;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import comp5216.sydney.edu.au.afinal.database.Firebase;
 import comp5216.sydney.edu.au.afinal.entity.EventEntity;
 import comp5216.sydney.edu.au.afinal.entity.Events;
-import comp5216.sydney.edu.au.afinal.util.ImageTask;
-import comp5216.sydney.edu.au.afinal.util.NetUtil;
 
 public class EventActivity extends AppCompatActivity {
-    public static int REQUEST_CODE_EVENT = 502;
+
 
     private ImageButton goBack;
 
@@ -44,9 +41,9 @@ public class EventActivity extends AppCompatActivity {
     private TextView description;
     private TextView location;
     private TextView likeNum;
-    private Banner<Bitmap, MyBannerAdapter> banner;
+    private Banner<Bitmap, BannerImageAdapter<Bitmap>> banner;
 
-    private List<Bitmap> imageList = new ArrayList<>();
+    private List<Bitmap> imageList;
     private EventEntity eventEntity;
 
     @Override
@@ -76,7 +73,6 @@ public class EventActivity extends AppCompatActivity {
         location = findViewById(R.id.event_text_location);
         likeNum = findViewById(R.id.event_favorite_num);
         banner = findViewById(R.id.event_banner);
-        banner.setAdapter(new MyBannerAdapter(imageList));
     }
 
     private void show(EventEntity event){
@@ -113,35 +109,32 @@ public class EventActivity extends AppCompatActivity {
 
     }
 
-    public void onAvatarClick(View view) {
-        Intent intent = new Intent(EventActivity.this, HomePageActivity.class);
-        intent.putExtra("ViewAccountID", eventEntity.getBlog_ref());
-
-        startActivityForResult(intent, REQUEST_CODE_EVENT);
-    }
-
     private void loadImage(){
         List<String> imageUrls = eventEntity.getImageUrl();
         if(imageUrls == null || imageUrls.size() == 0){
             return;
         }
+        imageList = new ArrayList<>(imageUrls.size());
         for(int i = 0; i < imageUrls.size(); i ++){
-            new ImageTask(new ImageTask.CallBack() {
+//            new ImageTask(new ImageTask.CallBack() {
+//                @Override
+//                public void getResults(Bitmap result, String url) {
+//                    imageList.add(result);
+//                }
+//            }).execute(imageUrls.get(i));
+            int finalI = i;
+            banner.setAdapter(new BannerImageAdapter<Bitmap>(imageList){
                 @Override
-                public void getResults(Bitmap result, String url) {
-                    imageList.add(result);
+                public void onBindView(BannerImageHolder holder, Bitmap data, int position, int size) {
+                       Glide.with(holder.itemView).load(imageUrls.get(finalI)).apply(RequestOptions.bitmapTransform(new
+                               RoundedCorners(30))).into(holder.imageView);
                 }
-            }).execute(imageUrls.get(i));
+            });
         }
     }
 
-    public  void onFollowClick(View view)
-    {
-        follow();
-    }
-
     private void follow(){
-        NetUtil.follow(Firebase.getInstance().getLocalUser().getAccountID(), eventEntity.getBlog_ref(), null);
+
     }
 
 

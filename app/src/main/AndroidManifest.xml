@@ -25,7 +25,7 @@
         android:theme="@style/Theme.Final"
         tools:targetApi="32">
         <activity
-            android:name=".EventActivity"
+            android:name=".LoginActivity"
             android:exported="false"/>
         <activity
             android:name=".RegisterActivity"
@@ -39,7 +39,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".AddActivity"
+            android:name=".EventActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
@@ -53,7 +53,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".LoginActivity"
+            android:name=".AddActivity"
             android:label="Login"
             android:exported="true">
             <intent-filter>
