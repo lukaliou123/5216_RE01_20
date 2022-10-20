@@ -67,6 +67,10 @@ public class Firebase {
         return localUser;
     }
 
+    public StorageReference getPhotoStorageRef(String doc){
+        return storageRef.child(doc);
+    }
+
     public Task setLocalUser(String uid){
         return mFirestore.collection("Accounts")
                 .document(uid)

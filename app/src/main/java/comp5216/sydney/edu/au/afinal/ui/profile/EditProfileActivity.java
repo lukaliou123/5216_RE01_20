@@ -129,15 +129,12 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
                 .setPositiveButton(R.string.Yes, new
                         DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialogInterface, int i) {
-                                Intent intent = new Intent(EditProfileActivity.this, ProfileFragment.class);
-                                startActivity(intent);
+                                finish();
                             }
                         })
                 .setNegativeButton(R.string.No, new
                         DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialogInterface, int i) {
-                                // User cancelled the dialog
-                                // Nothing happens
                             }
                         });
         builder.create().show();
