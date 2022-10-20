@@ -3,9 +3,11 @@ package comp5216.sydney.edu.au.afinal;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -24,6 +26,7 @@ import com.google.firebase.storage.StorageReference;
 import com.youth.banner.Banner;
 import com.youth.banner.adapter.BannerImageAdapter;
 import com.youth.banner.holder.BannerImageHolder;
+import com.youth.banner.indicator.CircleIndicator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,9 +35,12 @@ import comp5216.sydney.edu.au.afinal.database.Firebase;
 import comp5216.sydney.edu.au.afinal.entity.Account;
 import comp5216.sydney.edu.au.afinal.entity.EventEntity;
 import comp5216.sydney.edu.au.afinal.entity.Events;
+import comp5216.sydney.edu.au.afinal.util.ImageTask;
+import comp5216.sydney.edu.au.afinal.util.NetUtil;
 
 public class EventActivity extends AppCompatActivity {
 
+    public static int REQUEST_CODE_EVENT = 502;
 
     private ImageButton goBack;
 
@@ -50,6 +56,7 @@ public class EventActivity extends AppCompatActivity {
 
     private List<Bitmap> imageList;
     private EventEntity eventEntity;
+    private MyBannerAdapter bannerAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,8 +69,9 @@ public class EventActivity extends AppCompatActivity {
 
         eventEntity = events.get();//(EventEntity)getIntent().getSerializableExtra("event");
         initView();
-        loadImage();
+
         show(eventEntity);
+        loadImage();
 
     }
 
@@ -130,19 +138,42 @@ public class EventActivity extends AppCompatActivity {
         }
         imageList = new ArrayList<>(imageUrls.size());
         for(int i = 0; i < imageUrls.size(); i ++){
-            int finalI = i;
-            banner.setAdapter(new BannerImageAdapter<Bitmap>(imageList){
+            new ImageTask(new ImageTask.CallBack(){
+
                 @Override
-                public void onBindView(BannerImageHolder holder, Bitmap data, int position, int size) {
-                       Glide.with(holder.itemView).load(imageUrls.get(finalI)).apply(RequestOptions.bitmapTransform(new
-                               RoundedCorners(30))).into(holder.imageView);
+                public void getResults(Bitmap result, String url) {
+                    imageList.add(result);
                 }
-            });
+            }).execute(imageUrls.get(i));
+//            banner.setAdapter(new MyBannerAdapter(imageList));
+            System.out.println("banner !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!: "+i);
+            System.out.println(imageUrls.get(i));
+            int finalI = i;
+//            banner.setAdapter(new BannerImageAdapter<Bitmap>(imageList){
+//                @Override
+//                public void onBindView(BannerImageHolder holder, Bitmap data, int position, int size) {
+//                       Glide.with(holder.itemView).load(imageUrls.get(0)).apply(RequestOptions.bitmapTransform(new
+//                               RoundedCorners(30))).into(holder.imageView);
+//                }
+//            });
         }
     }
 
-    private void follow(){
+    public  void onFollowClick(View view)
+    {
+        follow();
+    }
 
+    private void follow(){
+        NetUtil.follow(Firebase.getInstance().getLocalUser().getAccountID(), eventEntity.getBlog_ref(), null);
+
+    }
+
+    public void onAvatarClick(View view) {
+        Intent intent = new Intent(EventActivity.this, HomePageActivity.class);
+        intent.putExtra("ViewAccountID", eventEntity.getBlog_ref());
+
+        startActivityForResult(intent, REQUEST_CODE_EVENT);
     }
 
 
