@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -37,6 +38,7 @@ import java.util.ArrayList;
 import comp5216.sydney.edu.au.afinal.database.Firebase;
 import comp5216.sydney.edu.au.afinal.entity.Account;
 import comp5216.sydney.edu.au.afinal.entity.EventEntity;
+import comp5216.sydney.edu.au.afinal.entity.Events;
 import comp5216.sydney.edu.au.afinal.entity.FollowRelationItem;
 import comp5216.sydney.edu.au.afinal.util.NetUtil;
 
@@ -51,6 +53,7 @@ public class HomePageActivity extends AppCompatActivity {
     Button followBtn;
     boolean followed = false;
     public static final int  REQUEST_CODE_FOLLOWING = 527;
+    public static final int REQUEST_CODE_EVENT = 528;
     EventAdapter eventAdapter;
 
 
@@ -83,63 +86,6 @@ public class HomePageActivity extends AppCompatActivity {
                             refreshFollowerStatusUI();
                         }
                 });
-    }
-
-    private void unfollow(String loginAccountId, String viewAccountId) {
-        if(loginAccountId.equals(viewAccountId))
-            return;
-
-        FirebaseFirestore.getInstance().collection("FollowRelation").whereEqualTo("followerID", loginAccountId).whereEqualTo("followeeID", viewAccountId).get().addOnCompleteListener(
-                new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if(task.isSuccessful())
-                        {
-                            for(QueryDocumentSnapshot doc : task.getResult()) {
-                                doc.getReference().delete().addOnCompleteListener(
-                                        new OnCompleteListener<Void>() {
-                                            @Override
-                                            public void onComplete(@NonNull Task<Void> task) {
-                                                refreshFollowingStatusUI();
-                                                refreshFollowerStatusUI();
-                                            }
-                                        }
-                                );
-                            }
-                        }
-                    }}
-        );
-
-    }
-
-    private void follow(String loginAccountId, String viewAccountId) {
-        if(loginAccountId.equals(viewAccountId))
-            return;
-
-        FirebaseFirestore.getInstance().collection("FollowRelation").whereEqualTo("followerID", loginAccountId).whereEqualTo("followeeID", viewAccountId).get().addOnCompleteListener(
-                new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if(task.isSuccessful())
-                        {
-                            if (task.getResult().size() == 0)
-                            {
-                                FollowRelationItem item = new FollowRelationItem();
-                                item.setFollowerID(loginAccountPath);
-                                item.setFolloweeID(tobefollowAccountPath);
-                                mFireDB.collection("FollowRelation").add(item).addOnCompleteListener(
-                                        new OnCompleteListener<DocumentReference>() {
-                                            @Override
-                                            public void onComplete(@NonNull Task<DocumentReference> task) {
-                                                refreshFollowingStatusUI();
-                                                refreshFollowerStatusUI();
-                                            }
-                                        }
-                                );
-                            }
-                        }
-                    }}
-        );
     }
 
     private void getAndShowAccounts(ArrayList<String> accountIDs)
@@ -183,6 +129,17 @@ public class HomePageActivity extends AppCompatActivity {
         eventAdapter = new EventAdapter(events, this);
         ListView listViewEvents = findViewById(R.id.lstViewEvent);
         listViewEvents.setAdapter(eventAdapter);
+        listViewEvents.setOnItemClickListener(
+                new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                        EventEntity event = (EventEntity) adapterView.getItemAtPosition(i);
+                        Events.getSingleton().add(event);
+                        Intent intent = new Intent(HomePageActivity.this, EventActivity.class);
+                        startActivityForResult(intent, REQUEST_CODE_EVENT);
+                    }
+                }
+        );
         loginAccount = Firebase.getInstance().getLocalUser();
         loginAccountPath = loginAccount.getAccountID();
         Intent intent = getIntent();
@@ -313,10 +270,16 @@ public class HomePageActivity extends AppCompatActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         super.onActivityResult(requestCode, resultCode, data);
-        String newAccountID = data.getStringExtra("AccountID");
-        if(tobefollowAccountPath != newAccountID) {
-            tobefollowAccountPath = newAccountID;
-            refreshViewAccountUI();
+        if(requestCode == REQUEST_CODE_FOLLOWING) {
+            String newAccountID = data.getStringExtra("AccountID");
+            if (tobefollowAccountPath != newAccountID) {
+                tobefollowAccountPath = newAccountID;
+                refreshViewAccountUI();
+            }
+        }
+        else if(requestCode == REQUEST_CODE_EVENT)
+        {
+            refreshEventsUI();
         }
     }
 
