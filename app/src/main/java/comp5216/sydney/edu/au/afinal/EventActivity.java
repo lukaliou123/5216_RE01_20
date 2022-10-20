@@ -25,6 +25,8 @@ import com.youth.banner.holder.BannerImageHolder;
 import java.util.ArrayList;
 import java.util.List;
 
+import comp5216.sydney.edu.au.afinal.database.Firebase;
+import comp5216.sydney.edu.au.afinal.entity.Account;
 import comp5216.sydney.edu.au.afinal.entity.EventEntity;
 import comp5216.sydney.edu.au.afinal.entity.Events;
 
@@ -45,6 +47,7 @@ public class EventActivity extends AppCompatActivity {
 
     private List<Bitmap> imageList;
     private EventEntity eventEntity;
+    private Account followUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,24 +86,14 @@ public class EventActivity extends AppCompatActivity {
         location.setText(event.getLocation());
         likeNum.setText(event.getLikes()+"");
         //show avatar of blogger
-//// Reference to an image file in Cloud Storage
-        StorageReference ref = FirebaseStorage.getInstance().getReference().child("pig.jpeg");
-        //System.out.println("look!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! "+ref.getDownloadUrl().toString());
-        ref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-            @Override
-            public void onSuccess(Uri uri) {
-                System.out.println("look!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! "+uri);
-                Glide.with(getApplicationContext())
-                        .load(uri)
-                        .into(userAvatar);
-                // Got the download URL for 'users/me/profile.png'
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception exception) {
-                // Handle any errors
-            }
-        });
+        String userId = eventEntity.getBlog_ref();
+        Firebase FB = Firebase.getInstance();
+        FB.setFollowUser(userId);
+        followUser = FB.getFollowUserUser();
+        String followIcon = followUser.getIcon();
+        Glide.with(getApplicationContext())
+                .load(followIcon)
+                .into(userAvatar);
 
     }
 

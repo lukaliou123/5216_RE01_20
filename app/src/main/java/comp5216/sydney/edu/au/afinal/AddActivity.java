@@ -117,10 +117,10 @@ public class AddActivity extends AppCompatActivity {
                    if(task.isSuccessful()){
                        urls.add(task.getResult().toString());
                        if(finalI == photoPath.size() - 1){
-                           EventEntity event = new EventEntity("test","??",description,new Timestamp(new Date()),geo,
-                                   urls,0,address,titleVal);
-//        EventEntity event = new EventEntity(curUser.getUsername(),curUser.getAccountID(),description,new Timestamp(new Date()),geo,
-//                urls,0,address,titleVal);
+//                           EventEntity event = new EventEntity("test","??",description,new Timestamp(new Date()),geo,
+//                                   urls,0,address,titleVal);
+        EventEntity event = new EventEntity(curUser.getUsername(),curUser.getAccountID(),description,new Timestamp(new Date()),geo,
+                urls,0,address,titleVal);
                            NetUtil.uploadEvent(event, AddActivity.this);
                        }
                    }
