@@ -25,7 +25,6 @@ import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -37,7 +36,6 @@ import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.GeoPoint;
 import com.makeramen.roundedimageview.RoundedImageView;
 import com.youth.banner.Banner;
-import com.youth.banner.indicator.CircleIndicator;
 import com.youth.banner.listener.OnBannerListener;
 
 import java.io.File;
@@ -149,6 +147,8 @@ public class AddActivity extends AppCompatActivity {
                    if(task.isSuccessful()){
                        urls.add(task.getResult().toString());
                        if(finalI == photoPath.size() - 1){
+//                           EventEntity event = new EventEntity("test","??",description,new Timestamp(new Date()),geo,
+//                                   urls,0,address,titleVal);
                            EventEntity event = new EventEntity(curUser.getUsername(),curUser.getAccountID(),description,
                                    new Timestamp(new Date()),geo, urls,0,address,titleVal);
                            NetUtil.uploadEvent(event, AddActivity.this);
@@ -167,7 +167,6 @@ public class AddActivity extends AppCompatActivity {
         startActivityForResult(intent, 1);
     }
 
-    @SuppressLint("NotifyDataSetChanged")
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -189,6 +188,7 @@ public class AddActivity extends AppCompatActivity {
                 image = BitmapFactory.decodeFile(picturePath);
                 photoPath.add(picturePath);
                 imageList.add(image);
+
             }bannerAdapter.notifyDataSetChanged();
 
         }

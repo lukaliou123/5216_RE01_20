@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -52,11 +53,10 @@ public class EventActivity extends AppCompatActivity {
     private TextView description;
     private TextView location;
     private TextView likeNum;
-    private Banner<Bitmap, BannerImageAdapter<Bitmap>> banner;
-
-    private List<Bitmap> imageList;
-    private EventEntity eventEntity;
+    private Banner<Bitmap, MyBannerAdapter> banner;
     private MyBannerAdapter bannerAdapter;
+    private List<Bitmap> imageList = new ArrayList<>();
+    private EventEntity eventEntity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,9 +69,8 @@ public class EventActivity extends AppCompatActivity {
 
         eventEntity = events.get();//(EventEntity)getIntent().getSerializableExtra("event");
         initView();
-
-        show(eventEntity);
         loadImage();
+        show(eventEntity);
 
     }
 
@@ -87,6 +86,8 @@ public class EventActivity extends AppCompatActivity {
         location = findViewById(R.id.event_text_location);
         likeNum = findViewById(R.id.event_favorite_num);
         banner = findViewById(R.id.event_banner);
+        bannerAdapter = new MyBannerAdapter(imageList);
+        banner.setAdapter(bannerAdapter);
     }
 
     private void show(EventEntity event) {
@@ -136,26 +137,17 @@ public class EventActivity extends AppCompatActivity {
         if(imageUrls == null || imageUrls.size() == 0){
             return;
         }
-        imageList = new ArrayList<>(imageUrls.size());
         for(int i = 0; i < imageUrls.size(); i ++){
-            new ImageTask(new ImageTask.CallBack(){
-
+            new ImageTask(new ImageTask.CallBack() {
                 @Override
                 public void getResults(Bitmap result, String url) {
-                    imageList.add(result);
+                    if(result != null) {
+                        imageList.add(result);
+                        bannerAdapter.notifyDataSetChanged();
+                    }
                 }
             }).execute(imageUrls.get(i));
-//            banner.setAdapter(new MyBannerAdapter(imageList));
-            System.out.println("banner !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!: "+i);
-            System.out.println(imageUrls.get(i));
-            int finalI = i;
-//            banner.setAdapter(new BannerImageAdapter<Bitmap>(imageList){
-//                @Override
-//                public void onBindView(BannerImageHolder holder, Bitmap data, int position, int size) {
-//                       Glide.with(holder.itemView).load(imageUrls.get(0)).apply(RequestOptions.bitmapTransform(new
-//                               RoundedCorners(30))).into(holder.imageView);
-//                }
-//            });
+            Log.e(" comp5216.sydney.edu.au.afinal", imageUrls.get(i));
         }
     }
 
