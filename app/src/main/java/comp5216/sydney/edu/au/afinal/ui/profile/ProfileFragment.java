@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -15,11 +16,15 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.bumptech.glide.Glide;
 
+import java.util.ArrayList;
+
 import comp5216.sydney.edu.au.afinal.MapsActivity;
 import comp5216.sydney.edu.au.afinal.R;
 import comp5216.sydney.edu.au.afinal.database.Firebase;
 import comp5216.sydney.edu.au.afinal.databinding.FragmentProfileBinding;
 import comp5216.sydney.edu.au.afinal.entity.Account;
+import comp5216.sydney.edu.au.afinal.entity.EventEntity;
+import comp5216.sydney.edu.au.afinal.util.Adapter;
 
 public class ProfileFragment extends Fragment {
 
@@ -28,6 +33,9 @@ public class ProfileFragment extends Fragment {
     private ImageView image;
     private Account user;
     private boolean isFirst;
+    private ArrayList<EventEntity> events;
+    private Adapter eventsAdapter;
+    private ListView listView;
 
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -54,9 +62,21 @@ public class ProfileFragment extends Fragment {
                     .load(user.getIcon())
                     .into(image);
 
+        listView = binding.listView;
+        events = new ArrayList<>();
+        eventsAdapter = new Adapter(this.getContext(), events);
+        listView.setAdapter(eventsAdapter);
+        Firebase.getInstance().getUserEvent(events, eventsAdapter, user.getAccountID());
+        listViewListener();
+
         return root;
     }
 
+    private void listViewListener(){
+        listView.setOnItemClickListener((adapterView, view, i, l) -> {
+
+        });
+    }
 
     public class editProfileBtn implements View.OnClickListener {
         @Override

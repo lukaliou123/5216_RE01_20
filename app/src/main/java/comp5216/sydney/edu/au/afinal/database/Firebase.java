@@ -2,6 +2,7 @@ package comp5216.sydney.edu.au.afinal.database;
 
 import android.net.Uri;
 import android.util.Log;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
@@ -26,6 +27,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
+import comp5216.sydney.edu.au.afinal.R;
 import comp5216.sydney.edu.au.afinal.entity.Account;
 import comp5216.sydney.edu.au.afinal.entity.EventEntity;
 import comp5216.sydney.edu.au.afinal.util.Adapter;
@@ -158,13 +160,31 @@ public class Firebase {
                         if(task.isSuccessful()) {
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 events.add(EventEntity.FromQueryDocument(document));
-                                eventsAdapter.notifyDataSetChanged();
                             }
+                            eventsAdapter.notifyDataSetChanged();
                             Log.d("Firebase", "Finish");
                         } else {
                             Log.d("Firebase", "Error getting documents: ", task.getException());
                         }
                     }
                 });
+    }
+
+    public void getUserEvent(ArrayList<EventEntity> events, Adapter eventsAdapter, String uid) {
+        mFirestore.collection("Events").whereEqualTo("blog_ref", uid).get().addOnCompleteListener(
+                new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if(task.isSuccessful()) {
+                            events.clear();
+                            for (QueryDocumentSnapshot doc : task.getResult()) {
+                                EventEntity event = EventEntity.FromQueryDocument(doc);
+                                events.add(event);
+
+                            }eventsAdapter.notifyDataSetChanged();
+                        }
+                    }
+                }
+        );
     }
 }
