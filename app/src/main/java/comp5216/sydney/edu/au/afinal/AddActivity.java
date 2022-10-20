@@ -40,6 +40,8 @@ import java.util.Date;
 import java.util.List;
 
 
+import comp5216.sydney.edu.au.afinal.database.Firebase;
+import comp5216.sydney.edu.au.afinal.entity.Account;
 import comp5216.sydney.edu.au.afinal.entity.EventEntity;
 import comp5216.sydney.edu.au.afinal.util.FormatUtil;
 import comp5216.sydney.edu.au.afinal.util.NetUtil;
@@ -100,11 +102,12 @@ public class AddActivity extends AppCompatActivity {
 
 
     private void uploadData(){
+        Account curUser = Firebase.getInstance().getLocalUser();
         String titleVal = title.getText().toString();
         String description = content.getText().toString();
         List<String> urls = NetUtil.uploadMediaFiles(photoPath, AddActivity.this);
         GeoPoint geo = new GeoPoint(l.getLatitude(),l.getLongitude());
-        EventEntity event = new EventEntity("test","???",description,new Timestamp(new Date()),geo,
+        EventEntity event = new EventEntity(curUser.getName(),curUser.getAccountID(),description,new Timestamp(new Date()),geo,
                 urls,0,address,titleVal);
         NetUtil.uploadEvent(event, AddActivity.this);
     }
