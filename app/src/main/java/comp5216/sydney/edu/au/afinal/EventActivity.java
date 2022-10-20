@@ -116,12 +116,6 @@ public class EventActivity extends AppCompatActivity {
         }
         imageList = new ArrayList<>(imageUrls.size());
         for(int i = 0; i < imageUrls.size(); i ++){
-//            new ImageTask(new ImageTask.CallBack() {
-//                @Override
-//                public void getResults(Bitmap result, String url) {
-//                    imageList.add(result);
-//                }
-//            }).execute(imageUrls.get(i));
             int finalI = i;
             banner.setAdapter(new BannerImageAdapter<Bitmap>(imageList){
                 @Override

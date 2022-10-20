@@ -28,6 +28,7 @@ import com.google.firebase.storage.UploadTask;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 
@@ -38,50 +39,32 @@ import io.grpc.Compressor;
 public class NetUtil {
 
 
-    public static String uploadMediaFile(String filePath, Context context){
+    public static Task<Uri> uploadMediaFile(String filePath){
+        Task<Uri> uriTask = null;
         if(filePath != null)
         {
             //Firebase
             StorageReference storageReference =  FirebaseStorage.getInstance().getReference();
-            final ProgressDialog progressDialog = new ProgressDialog(context);
-            progressDialog.setTitle("Uploading to firebase...");
-            progressDialog.show();
-            final String[] resUrl = {null};
             StorageReference ref = storageReference.child("images/" + new File(filePath).getName());
-            ref.putFile(Uri.fromFile(new File(filePath)))
-                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                        @Override
-                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                            progressDialog.dismiss();
-                            ref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                                @Override
-                                public void onSuccess(Uri uri) {
-                                    //get the url of the file we have uploaded
-                                    Log.e("uri",uri.getPath());
-                                    resUrl[0] = uri.getPath();
-                                }
-                            });
-                            Toast.makeText(context, "Uploaded", Toast.LENGTH_SHORT).show();
-                        }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            progressDialog.dismiss();
-                            Toast.makeText(context, "Failed "+e.getMessage(), Toast.LENGTH_SHORT).show();
-                        }
-                    })
-                    .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-                        @Override
-                        public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
-                            double progress = (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot
-                                    .getTotalByteCount());
-                            progressDialog.setMessage("Uploaded "+(int)progress+"%");
-                        }
-                    });
-            return resUrl[0];
+            UploadTask uploadTask = ref.putFile(Uri.fromFile(new File(filePath)));
+            uriTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+                @Override
+                public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                    if (!task.isSuccessful()) {
+                        throw Objects.requireNonNull(task.getException());
+                    }
+                    return ref.getDownloadUrl();
+                }
+            }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                @Override
+                public void onComplete(@NonNull Task<Uri> task) {
+                    if (task.isSuccessful()) {
+                        Log.d("Firebase", "Photo uploaded");
+                    }
+                }
+            });
         }
-        return  null;
+        return uriTask;
     }
 
     public static List<Task<Uri>> uploadMediaFiles(List<String> filePaths, Context context){

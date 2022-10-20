@@ -98,8 +98,8 @@ public class HomePageActivity extends AppCompatActivity {
                             if (task.getResult().size() == 0)
                             {
                                 FollowRelationItem item = new FollowRelationItem();
-                                item.setFollowerID(loginAccountId);
-                                item.setFolloweeID(viewAccountId);
+                                //item.setFollowerID(loginAccountId);
+                                //item.setFolloweeID(viewAccountId);
                                 mFireDB.collection("FollowRelation").add(item).addOnCompleteListener(
                                         new OnCompleteListener<DocumentReference>() {
                                             @Override
@@ -129,7 +129,7 @@ public class HomePageActivity extends AppCompatActivity {
                             {
                                 Account cAccount = doc.toObject(Account.class);
                                 accountIDs.add(Integer.parseInt(cAccount.getAccountID()));
-                                accountNames.add(cAccount.getName());
+                                accountNames.add(cAccount.getUsername());
                             }
 
                             if(accountIDs.size() > 0) {
@@ -182,7 +182,7 @@ public class HomePageActivity extends AppCompatActivity {
                             {
                                 tobefollowAccount = doc.toObject(Account.class);
                                 TextView textViewName = findViewById(R.id.NameTextView);
-                                textViewName.setText(tobefollowAccount.getName());
+                                textViewName.setText(tobefollowAccount.getUsername());
 
                                 try {
                                     localFile = File.createTempFile("images", "jpg");
@@ -223,7 +223,7 @@ public class HomePageActivity extends AppCompatActivity {
                         for(QueryDocumentSnapshot doc : task.getResult())
                         {
                             FollowRelationItem item = doc.toObject(FollowRelationItem.class);
-                            followingIDs.add(item.getFolloweeID());
+                            followingIDs.add(Integer.valueOf(item.getFolloweeID()));
                         }
                         TextView textView = findViewById(R.id.FollowingTextView);
                         if (followingIDs.size() != 0)
@@ -246,8 +246,8 @@ public class HomePageActivity extends AppCompatActivity {
                             followed = false;
                             for (QueryDocumentSnapshot doc : task.getResult()) {
                                 FollowRelationItem item = doc.toObject(FollowRelationItem.class);
-                                followerIDs.add(item.getFollowerID());
-                                if(loginAccountId == item.getFollowerID()) {
+                                followerIDs.add(Integer.valueOf(item.getFollowerID()));
+                                if(loginAccountId == Integer.valueOf(item.getFollowerID())) {
                                     followed = true;
                                 }
                             }

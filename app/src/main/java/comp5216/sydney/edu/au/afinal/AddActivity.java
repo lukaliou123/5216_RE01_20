@@ -1,5 +1,6 @@
 package comp5216.sydney.edu.au.afinal;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
@@ -27,6 +28,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.GeoPoint;
@@ -105,15 +107,28 @@ public class AddActivity extends AppCompatActivity {
         Account curUser = Firebase.getInstance().getLocalUser();
         String titleVal = title.getText().toString();
         String description = content.getText().toString();
-        List<Task<Uri>> uris = NetUtil.uploadMediaFiles(photoPath, AddActivity.this);
         List<String> urls = new ArrayList<>();
-        for(int i = 0; i < uris.size(); i ++){
-            urls.add(uris.get(i).toString());
-        }
         GeoPoint geo = new GeoPoint(l.getLatitude(),l.getLongitude());
-        EventEntity event = new EventEntity(curUser.getUsername(),curUser.getAccountID(),description,new Timestamp(new Date()),geo,
-                urls,0,address,titleVal);
-        NetUtil.uploadEvent(event, AddActivity.this);
+        for(int i = 0; i < photoPath.size(); i ++){
+            int finalI = i;
+            NetUtil.uploadMediaFile(photoPath.get(i)).addOnCompleteListener(new OnCompleteListener<Uri>() {
+               @Override
+               public void onComplete(@NonNull Task<Uri> task) {
+                   if(task.isSuccessful()){
+                       urls.add(task.getResult().toString());
+                       if(finalI == photoPath.size() - 1){
+                           EventEntity event = new EventEntity("test","??",description,new Timestamp(new Date()),geo,
+                                   urls,0,address,titleVal);
+//        EventEntity event = new EventEntity(curUser.getUsername(),curUser.getAccountID(),description,new Timestamp(new Date()),geo,
+//                urls,0,address,titleVal);
+                           NetUtil.uploadEvent(event, AddActivity.this);
+                       }
+                   }
+               }
+           });
+        }
+
+
     }
 
     private void chooseImage(){
