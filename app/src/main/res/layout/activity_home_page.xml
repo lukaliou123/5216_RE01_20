@@ -6,12 +6,41 @@
     android:layout_height="match_parent"
     tools:context=".HomePageActivity">
 
+    <!--title bar-->
+    <RelativeLayout
+        android:id="@+id/relativeLayout"
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        android:background="#fff"
+        android:orientation="vertical"
+        tools:ignore="MissingConstraints">
+
+        <ImageButton
+            android:id="@+id/profile_back"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginLeft="10dp"
+            android:layout_centerVertical="true"
+            android:layout_alignParentLeft="true"
+            android:background="@drawable/goback"
+            />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:gravity="center|center_vertical"
+            android:textColor="@color/black"
+            android:text="Profile"
+            android:textSize="20sp" />
+        />
+    </RelativeLayout>
+
     <ImageView
         android:id="@+id/IconImageView"
         android:layout_width="149dp"
         android:layout_height="138dp"
         android:layout_marginStart="120dp"
-        android:layout_marginTop="36dp"
+        android:layout_marginTop="60dp"
         android:gravity="center"
         app:layout_constraintEnd_toStartOf="@+id/FollowButton"
         app:layout_constraintHorizontal_bias="1.0"
@@ -35,7 +64,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="5dp"
-        android:layout_marginTop="80dp"
+        android:layout_marginTop="100dp"
         android:layout_marginEnd="10dp"
         android:onClick="onFollowBtnClick"
         android:text="Follow"

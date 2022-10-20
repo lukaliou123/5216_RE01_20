@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -51,6 +52,7 @@ public class HomePageActivity extends AppCompatActivity {
     ArrayList<EventEntity> events = new ArrayList<>();
     File localFile = null;
     Button followBtn;
+    private ImageButton goBack;
     boolean followed = false;
     public static final int  REQUEST_CODE_FOLLOWING = 527;
     public static final int REQUEST_CODE_EVENT = 528;
@@ -124,6 +126,11 @@ public class HomePageActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_page);
         mFireDB = FirebaseFirestore.getInstance();
+
+        // goback
+        goBack = findViewById(R.id.profile_back);
+        goBack.setOnClickListener(view -> onBackPressed());
+
         ImageView imageView = findViewById(R.id.IconImageView);
         followBtn = findViewById(R.id.FollowButton);
         eventAdapter = new EventAdapter(events, this);
