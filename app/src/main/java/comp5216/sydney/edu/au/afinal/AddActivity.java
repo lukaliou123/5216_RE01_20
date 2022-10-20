@@ -7,7 +7,6 @@ import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -107,7 +106,7 @@ public class AddActivity extends AppCompatActivity {
         String description = content.getText().toString();
         List<String> urls = NetUtil.uploadMediaFiles(photoPath, AddActivity.this);
         GeoPoint geo = new GeoPoint(l.getLatitude(),l.getLongitude());
-        EventEntity event = new EventEntity(curUser.getName(),curUser.getAccountID(),description,new Timestamp(new Date()),geo,
+        EventEntity event = new EventEntity(curUser.getUsername(),curUser.getAccountID(),description,new Timestamp(new Date()),geo,
                 urls,0,address,titleVal);
         NetUtil.uploadEvent(event, AddActivity.this);
     }

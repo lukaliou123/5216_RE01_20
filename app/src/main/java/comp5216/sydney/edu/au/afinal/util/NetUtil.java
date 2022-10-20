@@ -17,6 +17,8 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
@@ -28,6 +30,7 @@ import java.util.UUID;
 
 
 import comp5216.sydney.edu.au.afinal.entity.EventEntity;
+import comp5216.sydney.edu.au.afinal.entity.FollowRelationItem;
 import io.grpc.Compressor;
 
 public class NetUtil {
@@ -143,14 +146,49 @@ public class NetUtil {
         ref.set(event);
     }
 
+    public static void follow(String loginAccountId, String viewAccountId, OnCompleteListener<DocumentReference> updateUIListener) {
+        if(loginAccountId.equals(viewAccountId))
+            return;
 
+            FirebaseFirestore.getInstance().collection("FollowRelation").whereEqualTo("followerID", loginAccountId).whereEqualTo("followeeID", viewAccountId).get().addOnCompleteListener(
+                    new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            if(task.isSuccessful())
+                            {
+                                if (task.getResult().size() == 0)
+                                {
+                                    FollowRelationItem item = new FollowRelationItem();
+                                    item.setFollowerID(loginAccountId);
+                                    item.setFolloweeID(viewAccountId);
+                                    Task addFollowTask = FirebaseFirestore.getInstance().collection("FollowRelation").add(item);
+                                    if(updateUIListener != null)
+                                        addFollowTask.addOnCompleteListener(updateUIListener);
+                                }
+                            }
+                        }
+                    }
+            );
+    }
 
+    public static void unfollow(String loginAccountId, String viewAccountId, OnCompleteListener<Void> updateUIListener) {
+        if (loginAccountId == viewAccountId)
+            return;
 
-
-
-
-
-
-
+        FirebaseFirestore.getInstance().collection("FollowRelation").whereEqualTo("followerID", loginAccountId).whereEqualTo("followeeID", viewAccountId).get().addOnCompleteListener(
+                new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot doc : task.getResult()) {
+                                doc.getReference().delete().addOnCompleteListener(
+                                        updateUIListener
+                                );
+                            }
+                        }
+                    }
+                }
+        );
+    }
 
 }

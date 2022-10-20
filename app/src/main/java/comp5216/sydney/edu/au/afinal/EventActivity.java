@@ -31,9 +31,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import comp5216.sydney.edu.au.afinal.database.Firebase;
 import comp5216.sydney.edu.au.afinal.entity.EventEntity;
 import comp5216.sydney.edu.au.afinal.entity.Events;
 import comp5216.sydney.edu.au.afinal.util.ImageTask;
+import comp5216.sydney.edu.au.afinal.util.NetUtil;
 
 public class EventActivity extends AppCompatActivity {
     public static int REQUEST_CODE_EVENT = 502;
@@ -141,8 +143,13 @@ public class EventActivity extends AppCompatActivity {
         }
     }
 
-    private void follow(){
+    public  void onFollowClick(View view)
+    {
+        follow();
+    }
 
+    private void follow(){
+        NetUtil.follow(Firebase.getInstance().getLocalUser().getAccountID(), eventEntity.getBlog_ref(), null);
     }
 
 

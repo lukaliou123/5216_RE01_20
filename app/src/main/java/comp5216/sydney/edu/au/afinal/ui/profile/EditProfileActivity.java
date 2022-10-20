@@ -1,7 +1,6 @@
 package comp5216.sydney.edu.au.afinal.ui.profile;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
@@ -9,11 +8,9 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -29,7 +26,6 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseUser;
 
 import comp5216.sydney.edu.au.afinal.R;
-import comp5216.sydney.edu.au.afinal.RegisterActivity;
 import comp5216.sydney.edu.au.afinal.database.Firebase;
 import comp5216.sydney.edu.au.afinal.entity.Account;
 
@@ -52,8 +48,8 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
         imageView = findViewById(R.id.image);
         gender = findViewById(R.id.gender);
         Account user = Firebase.getInstance().getLocalUser();
-        username.setText(user.getName());
-        birth.setText(user.getBirthDate());
+        username.setText(user.getUsername());
+        birth.setText(user.getBirth());
         imageUri = null;
         if(!user.getIcon().equals(""))
             Glide.with(this)
