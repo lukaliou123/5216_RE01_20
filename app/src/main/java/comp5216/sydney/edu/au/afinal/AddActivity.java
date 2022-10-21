@@ -127,7 +127,7 @@ public class AddActivity extends AppCompatActivity {
         bannerAdapter.setOnBannerListener(new OnBannerListener<Bitmap>() {
             @Override
             public void OnBannerClick(Bitmap data, int position) {
-                 Log.e("TAG","点击"+position);
+                Log.e("TAG","点击"+position);
             }
         });
         banner.setDatas(imageList);
@@ -142,20 +142,20 @@ public class AddActivity extends AppCompatActivity {
         for(int i = 0; i < photoPath.size(); i ++){
             int finalI = i;
             NetUtil.uploadMediaFile(photoPath.get(i)).addOnCompleteListener(new OnCompleteListener<Uri>() {
-               @Override
-               public void onComplete(@NonNull Task<Uri> task) {
-                   if(task.isSuccessful()){
-                       urls.add(task.getResult().toString());
-                       if(finalI == photoPath.size() - 1){
+                @Override
+                public void onComplete(@NonNull Task<Uri> task) {
+                    if(task.isSuccessful()){
+                        urls.add(task.getResult().toString());
+                        if(finalI == photoPath.size() - 1){
 //                           EventEntity event = new EventEntity("test","??",description,new Timestamp(new Date()),geo,
 //                                   urls,0,address,titleVal);
-                           EventEntity event = new EventEntity(curUser.getUsername(),curUser.getAccountID(),description,
-                                   new Timestamp(new Date()),geo, urls,0,address,titleVal);
-                           NetUtil.uploadEvent(event, AddActivity.this);
-                       }
-                   }
-               }
-           });
+                            EventEntity event = new EventEntity(curUser.getUsername(),curUser.getAccountID(),description,
+                                    new Timestamp(new Date()),geo, urls,0,address,titleVal);
+                            NetUtil.uploadEvent(event, AddActivity.this);
+                        }
+                    }
+                }
+            });
         }
 
 
@@ -234,7 +234,7 @@ public class AddActivity extends AppCompatActivity {
 
             return file;
         } catch (Exception e) {
-            return null;
+            return file;
         }
     }
 
