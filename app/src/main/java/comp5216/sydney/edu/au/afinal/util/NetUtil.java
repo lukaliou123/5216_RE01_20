@@ -41,6 +41,7 @@ public class NetUtil {
             //Firebase
             StorageReference storageReference =  FirebaseStorage.getInstance().getReference();
             StorageReference ref = storageReference.child("images/" + new File(filePath).getName());
+
             UploadTask uploadTask = ref.putFile(Uri.fromFile(new File(filePath)));
             uriTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
                 @Override
