@@ -2,7 +2,6 @@ package comp5216.sydney.edu.au.afinal.database;
 
 import android.net.Uri;
 import android.util.Log;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
@@ -27,7 +26,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-import comp5216.sydney.edu.au.afinal.R;
 import comp5216.sydney.edu.au.afinal.entity.Account;
 import comp5216.sydney.edu.au.afinal.entity.EventEntity;
 import comp5216.sydney.edu.au.afinal.util.Adapter;

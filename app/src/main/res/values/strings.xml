@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Final</string>
+    <string name="app_name">Local Events</string>
     <string name="title_activity_maps">MapsActivity</string>
     <string name="title_activity_navigator">Navigator</string>
     <string name="title_home">Home</string>

@@ -2,7 +2,6 @@ package comp5216.sydney.edu.au.afinal.util;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.provider.CalendarContract;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,12 +15,9 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
-import java.util.List;
 
-import comp5216.sydney.edu.au.afinal.database.Firebase;
-import comp5216.sydney.edu.au.afinal.entity.EventEntity;
 import comp5216.sydney.edu.au.afinal.R;
-import comp5216.sydney.edu.au.afinal.ui.search.SearchFragment;
+import comp5216.sydney.edu.au.afinal.entity.EventEntity;
 
 public class Adapter extends BaseAdapter implements Filterable {
     private ArrayList<EventEntity> events;

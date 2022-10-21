@@ -19,7 +19,6 @@ import com.bumptech.glide.Glide;
 import java.util.ArrayList;
 
 import comp5216.sydney.edu.au.afinal.EventActivity;
-import comp5216.sydney.edu.au.afinal.MapsActivity;
 import comp5216.sydney.edu.au.afinal.R;
 import comp5216.sydney.edu.au.afinal.database.Firebase;
 import comp5216.sydney.edu.au.afinal.databinding.FragmentProfileBinding;

@@ -3,9 +3,12 @@ package comp5216.sydney.edu.au.afinal;
 import android.graphics.Bitmap;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.youth.banner.adapter.BannerAdapter;
+
 import java.util.List;
 
 public class MyBannerAdapter extends BannerAdapter<Bitmap, MyBannerAdapter.BannerViewHolder> {
