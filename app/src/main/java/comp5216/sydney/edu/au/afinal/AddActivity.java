@@ -2,6 +2,7 @@ package comp5216.sydney.edu.au.afinal;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -26,6 +27,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
@@ -123,11 +125,12 @@ public class AddActivity extends AppCompatActivity {
         location.setText(address);
         cancel.setOnClickListener(view -> onBackPressed());
         confirm.setOnClickListener(view -> {
-            try {
-                uploadData();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+//            try {
+//
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+            ifCompress();
         });
         selectImageBtn.setOnClickListener(view -> chooseImage());
         banner = findViewById(R.id.add_banner);
@@ -142,7 +145,39 @@ public class AddActivity extends AppCompatActivity {
         banner.setDatas(imageList);
     }
 
-    private void uploadData() throws IOException {
+    public void ifCompress(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(AddActivity.this);
+        builder.setTitle("TIPS")
+                .setMessage("Do you want to compress this Image?")
+                .setPositiveButton("YES", new
+                        DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialogInterface, int i) {
+//                                Intent intent = new Intent(EditToDoItemActivity.this, MainActivity.class);
+//                                startActivity(intent);
+                                try {
+                                    uploadCompressData();
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        })
+                .setNegativeButton("NO", new
+                        DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                // User cancelled the dialog
+                                // Nothing happens
+                                try {
+                                    uploadData();
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        });
+        builder.create().show();
+
+    }
+
+    private void uploadCompressData() throws IOException {
         Account curUser = Firebase.getInstance().getLocalUser();
         String titleVal = title.getText().toString();
         String description = content.getText().toString();
@@ -151,6 +186,33 @@ public class AddActivity extends AppCompatActivity {
         for(int i = 0; i < photoPath.size(); i ++){
             int finalI = i;
             uploadCompressedFile(photoPath.get(i)).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                @Override
+                public void onComplete(@NonNull Task<Uri> task) {
+                    if(task.isSuccessful()){
+                        urls.add(task.getResult().toString());
+                        if(finalI == photoPath.size() - 1){
+//                           EventEntity event = new EventEntity("test","??",description,new Timestamp(new Date()),geo,
+//                                   urls,0,address,titleVal);
+                            EventEntity event = new EventEntity(curUser.getUsername(),curUser.getAccountID(),description,
+                                    new Timestamp(new Date()),geo, urls,0,address,titleVal);
+                            NetUtil.uploadEvent(event, AddActivity.this);
+                        }
+                    }
+                }
+            });
+        }
+
+
+    }
+    private void uploadData() throws IOException {
+        Account curUser = Firebase.getInstance().getLocalUser();
+        String titleVal = title.getText().toString();
+        String description = content.getText().toString();
+        List<String> urls = new ArrayList<>();
+        GeoPoint geo = new GeoPoint(l.getLatitude(),l.getLongitude());
+        for(int i = 0; i < photoPath.size(); i ++){
+            int finalI = i;
+            NetUtil.uploadMediaFile(photoPath.get(i)).addOnCompleteListener(new OnCompleteListener<Uri>() {
                 @Override
                 public void onComplete(@NonNull Task<Uri> task) {
                     if(task.isSuccessful()){
