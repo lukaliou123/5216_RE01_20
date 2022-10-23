@@ -75,7 +75,7 @@ public class SearchFragment extends Fragment {
 
     private void listViewListener(){
         listView.setOnItemClickListener((adapterView, view, i, l) -> {
-            EventEntity event = events.get(i);
+            EventEntity event = eventsAdapter.getItem(i);
             Events tempEvents = Events.getSingleton();
             tempEvents.add(event);
             Intent intent = new Intent(this.getContext(), EventActivity.class);
